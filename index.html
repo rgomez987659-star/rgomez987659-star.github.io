@@ -64,6 +64,7 @@
         }
         .btn-success { background: #10b981; }
         .btn-danger { background: #ef4444; }
+        .btn-warning { background: #f59e0b; }
         
         .login-tabs { 
             display: flex; 
@@ -133,8 +134,9 @@
         }
         .finance-tabs {
             display: flex;
-            gap: 20px;
+            gap: 10px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         .finance-tab {
             padding: 10px 20px;
@@ -230,7 +232,7 @@
             background: white;
             padding: 30px;
             border-radius: 16px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -280,6 +282,77 @@
             border-radius: 8px;
             margin: 10px 0;
         }
+
+        /* Tablas */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+        }
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Sub-secciones */
+        .sub-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .sub-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .sub-section:hover {
+            transform: translateY(-2px);
+            border-color: #0ea5e9;
+        }
+        .sub-section-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        /* Servicios públicos */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .service-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .service-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
     </style>
     
     <!-- Firebase SDK -->
@@ -298,7 +371,7 @@
         <div class="card">
             <div style="text-align: center;">
                 <h1>JustPersonal</h1>
-                <p style="color: #64748b; margin: 8px 0 0;">Gestión de Propiedades Inteligente</p>
+                <p style="color: #64748b; margin: 8px 0 0;">Gestión Financiera Integral</p>
             </div>
             
             <div class="login-tabs">
@@ -358,7 +431,7 @@
             <!-- Dashboard Principal -->
             <div id="dashboard-main">
                 <h2>Bienvenido a tu Dashboard</h2>
-                <p>Selecciona una categoría para gestionar tus propiedades:</p>
+                <p>Selecciona una categoría para gestionar:</p>
                 
                 <div class="dashboard">
                     <div class="section" onclick="showSection('finanzas')">
@@ -388,64 +461,148 @@
                 </div>
             </div>
 
-            <!-- Panel de Finanzas (Gestión de Inmuebles) -->
+            <!-- Panel de Finanzas -->
             <div id="panel-finanzas" class="hidden">
                 <div class="finance-header">
                     <div>
                         <button class="back-btn" onclick="showDashboard()">← Volver</button>
-                        <h2>💰 Gestión de Inmuebles</h2>
+                        <h2>💰 Gestión Financiera</h2>
                     </div>
-                    <button class="btn" onclick="showAddPropertyModal()">➕ Agregar Inmueble</button>
                 </div>
 
-                <div class="finance-tabs">
-                    <button class="finance-tab active" onclick="switchFinanceTab('resumen')">Resumen</button>
-                    <button class="finance-tab" onclick="switchFinanceTab('propiedades')">Propiedades</button>
-                    <button class="finance-tab" onclick="switchFinanceTab('ingresos')">Ingresos</button>
-                    <button class="finance-tab" onclick="switchFinanceTab('gastos')">Gastos</button>
+                <div class="sub-sections">
+                    <div class="sub-section" onclick="showFinanceSubSection('resumen')">
+                        <div class="sub-section-icon">📊</div>
+                        <h3>Resumen General</h3>
+                        <p>Vista completa de tus finanzas</p>
+                    </div>
+                    <div class="sub-section" onclick="showFinanceSubSection('inmuebles')">
+                        <div class="sub-section-icon">🏠</div>
+                        <h3>Gestión de Inmuebles</h3>
+                        <p>Administra tus propiedades</p>
+                    </div>
+                    <div class="sub-section" onclick="showFinanceSubSection('ingresos')">
+                        <div class="sub-section-icon">💵</div>
+                        <h3>Ingresos</h3>
+                        <p>Registra todos tus ingresos</p>
+                    </div>
+                    <div class="sub-section" onclick="showFinanceSubSection('gastos')">
+                        <div class="sub-section-icon">💸</div>
+                        <h3>Gastos</h3>
+                        <p>Controla tus gastos</p>
+                    </div>
                 </div>
 
-                <!-- Resumen Mensual -->
-                <div id="tab-resumen" class="finance-panel">
-                    <h3>Resumen del Mes - Octubre 2024</h3>
+                <!-- Resumen General -->
+                <div id="finance-resumen" class="finance-panel">
+                    <h3>📊 Resumen Financiero General</h3>
                     <div class="properties-grid">
                         <div class="stat-card">
-                            <div class="stat-value" id="ingresos-mes">$0</div>
-                            <div class="stat-label">Ingresos del Mes</div>
+                            <div class="stat-value" id="total-ingresos">$0</div>
+                            <div class="stat-label">Total Ingresos</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value" id="alquiler-mes">$0</div>
-                            <div class="stat-label">Alquiler Mes</div>
+                            <div class="stat-value" id="total-gastos">$0</div>
+                            <div class="stat-label">Total Gastos</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value" id="gastos-mes">$0</div>
-                            <div class="stat-label">Gastos del Mes</div>
+                            <div class="stat-value" id="balance-total">$0</div>
+                            <div class="stat-label">Balance Total</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value" id="ganancia-mes">$0</div>
-                            <div class="stat-label">Ganancia Neta</div>
+                            <div class="stat-value" id="ingresos-inmuebles">$0</div>
+                            <div class="stat-label">Ingresos por Inmuebles</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <h4>Últimos Movimientos</h4>
+                        <div id="recent-transactions">
+                            <p>No hay movimientos recientes</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Lista de Propiedades -->
-                <div id="tab-propiedades" class="finance-panel hidden">
-                    <h3>Mis Inmuebles</h3>
-                    <div id="properties-list" class="properties-grid">
-                        <!-- Las propiedades se cargarán aquí desde Firebase -->
+                <!-- Gestión de Inmuebles -->
+                <div id="finance-inmuebles" class="finance-panel hidden">
+                    <div class="finance-header">
+                        <h3>🏠 Gestión de Inmuebles</h3>
+                        <button class="btn" onclick="showAddPropertyModal()">➕ Agregar Inmueble</button>
+                    </div>
+
+                    <div class="finance-tabs">
+                        <button class="finance-tab active" onclick="switchPropertyTab('lista')">Lista de Inmuebles</button>
+                        <button class="finance-tab" onclick="switchPropertyTab('servicios')">Servicios Públicos</button>
+                    </div>
+
+                    <!-- Lista de Inmuebles -->
+                    <div id="property-lista">
+                        <div id="properties-list" class="properties-grid">
+                            <!-- Las propiedades se cargarán aquí desde Firebase -->
+                        </div>
+                    </div>
+
+                    <!-- Servicios Públicos -->
+                    <div id="property-servicios" class="hidden">
+                        <h4>Gestión de Servicios Públicos</h4>
+                        <p>Selecciona un inmueble para gestionar sus servicios:</p>
+                        <div id="services-property-list" class="properties-grid">
+                            <!-- Lista de propiedades para servicios -->
+                        </div>
+                        <div id="services-detail" class="hidden">
+                            <!-- Detalle de servicios por propiedad -->
+                        </div>
                     </div>
                 </div>
 
                 <!-- Ingresos -->
-                <div id="tab-ingresos" class="finance-panel hidden">
-                    <h3>Registro de Ingresos</h3>
-                    <p>Gestión de ingresos por alquileres y otros conceptos.</p>
+                <div id="finance-ingresos" class="finance-panel hidden">
+                    <div class="finance-header">
+                        <h3>💵 Gestión de Ingresos</h3>
+                        <button class="btn btn-success" onclick="showAddIncomeModal()">➕ Agregar Ingreso</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="incomes-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
+                                    <th>Monto</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incomes-list">
+                                <!-- Los ingresos se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Gastos -->
-                <div id="tab-gastos" class="finance-panel hidden">
-                    <h3>Registro de Gastos</h3>
-                    <p>Gestión de gastos de mantenimiento, servicios, etc.</p>
+                <div id="finance-gastos" class="finance-panel hidden">
+                    <div class="finance-header">
+                        <h3>💸 Gestión de Gastos</h3>
+                        <button class="btn btn-danger" onclick="showAddExpenseModal()">➕ Agregar Gasto</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="expenses-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
+                                    <th>Monto</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenses-list">
+                                <!-- Los gastos se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -512,6 +669,10 @@
             <form id="property-form" onsubmit="saveProperty(event)">
                 <div class="grid">
                     <div class="col">
+                        <label>Ciudad</label>
+                        <input type="text" id="property-city" placeholder="Ej: Popayán, Cali" required>
+                    </div>
+                    <div class="col">
                         <label>Nombre del Inmueble</label>
                         <input type="text" id="property-name" placeholder="Ej: Apartamento Centro" required>
                     </div>
@@ -524,6 +685,7 @@
                             <option value="local">Local Comercial</option>
                             <option value="oficina">Oficina</option>
                             <option value="terreno">Terreno</option>
+                            <option value="apartaestudio">Apartaestudio</option>
                         </select>
                     </div>
                     <div class="col">
@@ -532,7 +694,19 @@
                     </div>
                     <div class="col">
                         <label>Valor de Alquiler Mensual ($)</label>
-                        <input type="number" id="property-rent" placeholder="0.00" step="0.01" required>
+                        <input type="number" id="property-rent" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="col">
+                        <label>Empresa de Energía</label>
+                        <input type="text" id="property-energy-company" placeholder="Ej: CEO, EMCALI">
+                    </div>
+                    <div class="col">
+                        <label>Número de Contrato Energía</label>
+                        <input type="text" id="property-energy-contract" placeholder="Número de contrato">
+                    </div>
+                    <div class="col">
+                        <label>Página Web para Pagos</label>
+                        <input type="url" id="property-payment-url" placeholder="https://...">
                     </div>
                     <div class="col">
                         <label>Descripción</label>
@@ -552,6 +726,110 @@
         </div>
     </div>
 
+    <!-- Modal para agregar ingreso -->
+    <div id="income-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Agregar Ingreso</h3>
+                <button class="close-btn" onclick="closeIncomeModal()">&times;</button>
+            </div>
+            <form id="income-form" onsubmit="saveIncome(event)">
+                <div class="grid">
+                    <div class="col">
+                        <label>Fecha</label>
+                        <input type="date" id="income-date" required>
+                    </div>
+                    <div class="col">
+                        <label>Descripción</label>
+                        <input type="text" id="income-description" placeholder="Descripción del ingreso" required>
+                    </div>
+                    <div class="col">
+                        <label>Categoría</label>
+                        <select id="income-category" required>
+                            <option value="alquiler">Alquiler</option>
+                            <option value="salario">Salario</option>
+                            <option value="inversiones">Inversiones</option>
+                            <option value="bonos">Bonos</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>Monto ($)</label>
+                        <input type="number" id="income-amount" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="col">
+                        <label>Inmueble Relacionado (opcional)</label>
+                        <select id="income-property">
+                            <option value="">Ninguno</option>
+                            <!-- Se llenará dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Ingreso</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para agregar gasto -->
+    <div id="expense-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Agregar Gasto</h3>
+                <button class="close-btn" onclick="closeExpenseModal()">&times;</button>
+            </div>
+            <form id="expense-form" onsubmit="saveExpense(event)">
+                <div class="grid">
+                    <div class="col">
+                        <label>Fecha</label>
+                        <input type="date" id="expense-date" required>
+                    </div>
+                    <div class="col">
+                        <label>Descripción</label>
+                        <input type="text" id="expense-description" placeholder="Descripción del gasto" required>
+                    </div>
+                    <div class="col">
+                        <label>Categoría</label>
+                        <select id="expense-category" required>
+                            <option value="servicios">Servicios Públicos</option>
+                            <option value="mantenimiento">Mantenimiento</option>
+                            <option value="impuestos">Impuestos</option>
+                            <option value="alimentacion">Alimentación</option>
+                            <option value="transporte">Transporte</option>
+                            <option value="salud">Salud</option>
+                            <option value="entretenimiento">Entretenimiento</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>Monto ($)</label>
+                        <input type="number" id="expense-amount" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="col">
+                        <label>Inmueble Relacionado (opcional)</label>
+                        <select id="expense-property">
+                            <option value="">Ninguno</option>
+                            <!-- Se llenará dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-danger">Guardar Gasto</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para servicios públicos -->
+    <div id="services-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="services-modal-title">Servicios Públicos</h3>
+                <button class="close-btn" onclick="closeServicesModal()">&times;</button>
+            </div>
+            <div id="services-modal-content">
+                <!-- Contenido dinámico para servicios -->
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -560,7 +838,7 @@
             apiKey: "AIzaSyA9vOVrtGrdVYU9FgUCtpZWOTwpmO5t2n4",
             authDomain: "propiedades-7f7fe.firebaseapp.com",
             projectId: "propiedades-7f7fe",
-            storageBucket: "propiedades-7f7fe.appspot.com",
+            storageBucket: "propiedades-7f7fe.firebasestorage.app",
             messagingSenderId: "429219311761",
             appId: "1:429219311761:web:4d45c7c5e53cc7c5394f30"
         };
@@ -578,6 +856,9 @@
 
         let currentUser = null;
         let editingPropertyId = null;
+        let editingIncomeId = null;
+        let editingExpenseId = null;
+        let currentPropertyForServices = null;
 
         // Función para mostrar errores
         function showError(message) {
@@ -646,10 +927,11 @@
                     return db.collection('users').doc(user.uid).set({
                         name: name,
                         email: email,
-                        createdAt: new Date()
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 })
                 .then(() => {
+                    checkFirebaseConnection();
                     showToast('🎉 ¡Cuenta creada exitosamente!', true);
                     showMainApp();
                 })
@@ -673,6 +955,7 @@
 
             auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
+                    checkFirebaseConnection();
                     showToast('👋 ¡Bienvenido de nuevo!', true);
                     showMainApp();
                 })
@@ -710,6 +993,9 @@
             document.getElementById('user-display').textContent = currentUser.email;
             showDashboard();
             loadProperties();
+            loadIncomes();
+            loadExpenses();
+            updateFinanceSummary();
         }
 
         function showDashboard() {
@@ -724,24 +1010,42 @@
             document.getElementById('panel-' + sectionName).classList.remove('hidden');
             
             if (sectionName === 'finanzas') {
-                loadProperties();
-                updateFinanceSummary();
+                showFinanceSubSection('resumen');
             }
         }
 
-        function switchFinanceTab(tabName) {
-            // Ocultar todas las pestañas
-            document.querySelectorAll('[id^="tab-"]').forEach(tab => {
-                tab.classList.add('hidden');
+        function showFinanceSubSection(subSection) {
+            // Ocultar todas las sub-secciones de finanzas
+            document.querySelectorAll('[id^="finance-"]').forEach(section => {
+                section.classList.add('hidden');
             });
+            // Mostrar la sub-sección seleccionada
+            document.getElementById('finance-' + subSection).classList.remove('hidden');
+            
+            if (subSection === 'inmuebles') {
+                switchPropertyTab('lista');
+            }
+        }
+
+        function switchPropertyTab(tabName) {
+            // Ocultar todas las pestañas de propiedades
+            document.getElementById('property-lista').classList.add('hidden');
+            document.getElementById('property-servicios').classList.add('hidden');
+            
             // Remover active de todos los tabs
-            document.querySelectorAll('.finance-tab').forEach(tab => {
+            document.querySelectorAll('#finance-inmuebles .finance-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
+            
             // Mostrar tab seleccionado
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            document.getElementById('property-' + tabName).classList.remove('hidden');
+            
             // Activar botón
             event.target.classList.add('active');
+            
+            if (tabName === 'servicios') {
+                loadPropertiesForServices();
+            }
         }
 
         // Gestión de propiedades con Firebase
@@ -759,15 +1063,39 @@
         function saveProperty(event) {
             event.preventDefault();
             
+            // Validar que el usuario esté autenticado
+            if (!currentUser) {
+                showError('❌ Debes iniciar sesión para guardar propiedades');
+                return;
+            }
+
+            // Obtener y validar datos
+            const rentValue = parseFloat(document.getElementById('property-rent').value);
+            if (isNaN(rentValue) || rentValue <= 0) {
+                showError('❌ El valor del alquiler debe ser un número mayor a 0');
+                return;
+            }
+
             const propertyData = {
-                name: document.getElementById('property-name').value,
+                city: document.getElementById('property-city').value.trim(),
+                name: document.getElementById('property-name').value.trim(),
                 type: document.getElementById('property-type').value,
-                address: document.getElementById('property-address').value,
-                rent: parseFloat(document.getElementById('property-rent').value),
-                description: document.getElementById('property-description').value,
+                address: document.getElementById('property-address').value.trim(),
+                rent: rentValue,
+                energyCompany: document.getElementById('property-energy-company').value.trim(),
+                energyContract: document.getElementById('property-energy-contract').value.trim(),
+                paymentUrl: document.getElementById('property-payment-url').value.trim(),
+                description: document.getElementById('property-description').value.trim(),
                 status: document.getElementById('property-status').value,
-                updatedAt: new Date()
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                userId: currentUser.uid
             };
+
+            // Mostrar loading
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Guardando...';
+            submitBtn.disabled = true;
 
             if (editingPropertyId) {
                 // Editar propiedad existente
@@ -776,48 +1104,73 @@
                         showToast('✅ Propiedad actualizada correctamente', true);
                         closePropertyModal();
                         loadProperties();
+                        updateFinanceSummary();
                     })
                     .catch((error) => {
+                        console.error('Error al actualizar:', error);
                         showError('❌ Error al actualizar: ' + error.message);
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
                     });
             } else {
                 // Agregar nueva propiedad
-                propertyData.userId = currentUser.uid;
-                propertyData.createdAt = new Date();
+                propertyData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                 
                 db.collection('properties').add(propertyData)
-                    .then(() => {
+                    .then((docRef) => {
+                        console.log('Propiedad guardada con ID:', docRef.id);
                         showToast('✅ Propiedad agregada correctamente', true);
                         closePropertyModal();
                         loadProperties();
+                        updateFinanceSummary();
                     })
                     .catch((error) => {
+                        console.error('Error al guardar:', error);
                         showError('❌ Error al guardar: ' + error.message);
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
                     });
             }
         }
 
         function loadProperties() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                console.log('No hay usuario autenticado');
+                return;
+            }
             
             const propertiesList = document.getElementById('properties-list');
-            propertiesList.innerHTML = '<p>Cargando propiedades...</p>';
+            propertiesList.innerHTML = '<p>🔄 Cargando propiedades...</p>';
             
             db.collection('properties')
                 .where('userId', '==', currentUser.uid)
                 .orderBy('createdAt', 'desc')
                 .get()
                 .then((querySnapshot) => {
+                    console.log('Propiedades encontradas:', querySnapshot.size);
                     propertiesList.innerHTML = '';
                     
                     if (querySnapshot.empty) {
-                        propertiesList.innerHTML = '<p>No tienes propiedades registradas. ¡Agrega tu primer inmueble!</p>';
+                        propertiesList.innerHTML = `
+                            <div style="text-align: center; padding: 40px; color: #64748b;">
+                                <div style="font-size: 48px; margin-bottom: 16px;">🏠</div>
+                                <h3>No tienes propiedades registradas</h3>
+                                <p>¡Agrega tu primer inmueble para comenzar!</p>
+                            </div>
+                        `;
                         return;
                     }
                     
                     querySnapshot.forEach((doc) => {
                         const property = doc.data();
                         const propertyId = doc.id;
+                        
+                        const createdAt = property.createdAt ? 
+                            property.createdAt.toDate().toLocaleDateString() : 'Fecha no disponible';
                         
                         const propertyCard = document.createElement('div');
                         propertyCard.className = 'property-card';
@@ -829,11 +1182,19 @@
                                     <button class="btn btn-small btn-danger" onclick="deleteProperty('${propertyId}')">🗑️</button>
                                 </div>
                             </div>
-                            <p><strong>Tipo:</strong> ${property.type}</p>
-                            <p><strong>Dirección:</strong> ${property.address}</p>
-                            <p><strong>Alquiler:</strong> $${property.rent.toFixed(2)}</p>
-                            <p><strong>Estado:</strong> ${property.status}</p>
-                            ${property.description ? `<p><strong>Descripción:</strong> ${property.description}</p>` : ''}
+                            <p><strong>🏙️ Ciudad:</strong> ${property.city}</p>
+                            <p><strong>🔹 Tipo:</strong> ${property.type}</p>
+                            <p><strong>📍 Dirección:</strong> ${property.address}</p>
+                            <p><strong>💰 Alquiler:</strong> $${property.rent.toFixed(2)}</p>
+                            <p><strong>📊 Estado:</strong> 
+                                <span style="color: ${
+                                    property.status === 'alquilado' ? '#10b981' : 
+                                    property.status === 'mantenimiento' ? '#f59e0b' : '#3b82f6'
+                                }">${property.status}</span>
+                            </p>
+                            ${property.energyCompany ? `<p><strong>⚡ Energía:</strong> ${property.energyCompany}</p>` : ''}
+                            ${property.description ? `<p><strong>📝 Descripción:</strong> ${property.description}</p>` : ''}
+                            <p><small><strong>🕒 Creado:</strong> ${createdAt}</small></p>
                             <div class="property-stats">
                                 <div class="stat-card">
                                     <div class="stat-value">$${property.rent.toFixed(2)}</div>
@@ -849,8 +1210,123 @@
                     });
                 })
                 .catch((error) => {
-                    showError('❌ Error al cargar propiedades: ' + error.message);
+                    console.error('Error detallado:', error);
+                    propertiesList.innerHTML = `
+                        <div class="error">
+                            <strong>❌ Error al cargar propiedades</strong>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
                 });
+        }
+
+        function loadPropertiesForServices() {
+            if (!currentUser) return;
+            
+            const servicesPropertyList = document.getElementById('services-property-list');
+            servicesPropertyList.innerHTML = '<p>Cargando propiedades...</p>';
+            
+            db.collection('properties')
+                .where('userId', '==', currentUser.uid)
+                .get()
+                .then((querySnapshot) => {
+                    servicesPropertyList.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        servicesPropertyList.innerHTML = '<p>No hay propiedades registradas</p>';
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const property = doc.data();
+                        const propertyId = doc.id;
+                        
+                        const propertyCard = document.createElement('div');
+                        propertyCard.className = 'property-card';
+                        propertyCard.innerHTML = `
+                            <div class="property-header">
+                                <h3>${property.name}</h3>
+                                <button class="btn btn-small btn-warning" onclick="showPropertyServices('${propertyId}')">
+                                    ⚡ Servicios
+                                </button>
+                            </div>
+                            <p><strong>🏙️ Ciudad:</strong> ${property.city}</p>
+                            <p><strong>📍 Dirección:</strong> ${property.address}</p>
+                            ${property.energyCompany ? `<p><strong>⚡ Empresa:</strong> ${property.energyCompany}</p>` : ''}
+                            ${property.energyContract ? `<p><strong>📄 Contrato:</strong> ${property.energyContract}</p>` : ''}
+                            ${property.paymentUrl ? `<p><strong>🌐 Pago:</strong> <a href="${property.paymentUrl}" target="_blank">Enlace</a></p>` : ''}
+                        `;
+                        servicesPropertyList.appendChild(propertyCard);
+                    });
+                });
+        }
+
+        function showPropertyServices(propertyId) {
+            currentPropertyForServices = propertyId;
+            
+            db.collection('properties').doc(propertyId).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const property = doc.data();
+                        const modal = document.getElementById('services-modal');
+                        const title = document.getElementById('services-modal-title');
+                        const content = document.getElementById('services-modal-content');
+                        
+                        title.textContent = `Servicios - ${property.name}`;
+                        content.innerHTML = `
+                            <div class="grid">
+                                <div class="col">
+                                    <label>Empresa de Energía</label>
+                                    <input type="text" id="edit-energy-company" value="${property.energyCompany || ''}">
+                                </div>
+                                <div class="col">
+                                    <label>Número de Contrato</label>
+                                    <input type="text" id="edit-energy-contract" value="${property.energyContract || ''}">
+                                </div>
+                                <div class="col">
+                                    <label>Página de Pagos</label>
+                                    <input type="url" id="edit-payment-url" value="${property.paymentUrl || ''}">
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-success" onclick="updatePropertyServices()">💾 Guardar Cambios</button>
+                                </div>
+                            </div>
+                            <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px;">
+                                <h4>🔗 Enlaces Rápidos</h4>
+                                ${property.paymentUrl ? `
+                                    <p><a href="${property.paymentUrl}" target="_blank" class="btn btn-small">🌐 Pagar Servicios</a></p>
+                                ` : '<p>Agrega una URL de pago para habilitar esta función</p>'}
+                            </div>
+                        `;
+                        modal.classList.remove('hidden');
+                    }
+                });
+        }
+
+        function updatePropertyServices() {
+            if (!currentPropertyForServices) return;
+            
+            const updateData = {
+                energyCompany: document.getElementById('edit-energy-company').value.trim(),
+                energyContract: document.getElementById('edit-energy-contract').value.trim(),
+                paymentUrl: document.getElementById('edit-payment-url').value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            db.collection('properties').doc(currentPropertyForServices).update(updateData)
+                .then(() => {
+                    showToast('✅ Servicios actualizados correctamente', true);
+                    closeServicesModal();
+                    loadPropertiesForServices();
+                })
+                .catch((error) => {
+                    showError('❌ Error al actualizar servicios: ' + error.message);
+                });
+        }
+
+        function closeServicesModal() {
+            document.getElementById('services-modal').classList.add('hidden');
+            currentPropertyForServices = null;
         }
 
         function editProperty(propertyId) {
@@ -861,10 +1337,14 @@
                     if (doc.exists) {
                         const property = doc.data();
                         document.getElementById('modal-title').textContent = 'Editar Inmueble';
+                        document.getElementById('property-city').value = property.city || '';
                         document.getElementById('property-name').value = property.name;
                         document.getElementById('property-type').value = property.type;
                         document.getElementById('property-address').value = property.address;
                         document.getElementById('property-rent').value = property.rent;
+                        document.getElementById('property-energy-company').value = property.energyCompany || '';
+                        document.getElementById('property-energy-contract').value = property.energyContract || '';
+                        document.getElementById('property-payment-url').value = property.paymentUrl || '';
                         document.getElementById('property-description').value = property.description || '';
                         document.getElementById('property-status').value = property.status;
                         document.getElementById('property-modal').classList.remove('hidden');
@@ -881,6 +1361,7 @@
                     .then(() => {
                         showToast('✅ Propiedad eliminada correctamente', true);
                         loadProperties();
+                        updateFinanceSummary();
                     })
                     .catch((error) => {
                         showError('❌ Error al eliminar: ' + error.message);
@@ -888,33 +1369,314 @@
             }
         }
 
-        function updateFinanceSummary() {
+        // Gestión de Ingresos
+        function showAddIncomeModal() {
+            editingIncomeId = null;
+            document.getElementById('income-form').reset();
+            document.getElementById('income-date').value = new Date().toISOString().split('T')[0];
+            loadPropertiesForDropdown('income-property');
+            document.getElementById('income-modal').classList.remove('hidden');
+        }
+
+        function closeIncomeModal() {
+            document.getElementById('income-modal').classList.add('hidden');
+        }
+
+        function saveIncome(event) {
+            event.preventDefault();
+            
+            if (!currentUser) {
+                showError('❌ Debes iniciar sesión');
+                return;
+            }
+
+            const incomeData = {
+                date: new Date(document.getElementById('income-date').value),
+                description: document.getElementById('income-description').value.trim(),
+                category: document.getElementById('income-category').value,
+                amount: parseFloat(document.getElementById('income-amount').value),
+                propertyId: document.getElementById('income-property').value || null,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                userId: currentUser.uid
+            };
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Guardando...';
+            submitBtn.disabled = true;
+
+            if (editingIncomeId) {
+                db.collection('incomes').doc(editingIncomeId).update(incomeData)
+                    .then(() => {
+                        showToast('✅ Ingreso actualizado correctamente', true);
+                        closeIncomeModal();
+                        loadIncomes();
+                        updateFinanceSummary();
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+            } else {
+                incomeData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                
+                db.collection('incomes').add(incomeData)
+                    .then(() => {
+                        showToast('✅ Ingreso agregado correctamente', true);
+                        closeIncomeModal();
+                        loadIncomes();
+                        updateFinanceSummary();
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+            }
+        }
+
+        function loadIncomes() {
             if (!currentUser) return;
+            
+            const incomesList = document.getElementById('incomes-list');
+            incomesList.innerHTML = '<tr><td colspan="5">Cargando ingresos...</td></tr>';
+            
+            db.collection('incomes')
+                .where('userId', '==', currentUser.uid)
+                .orderBy('date', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    incomesList.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        incomesList.innerHTML = '<tr><td colspan="5">No hay ingresos registrados</td></tr>';
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const income = doc.data();
+                        const incomeId = doc.id;
+                        const date = income.date.toDate().toLocaleDateString();
+                        
+                        incomesList.innerHTML += `
+                            <tr>
+                                <td>${date}</td>
+                                <td>${income.description}</td>
+                                <td>${income.category}</td>
+                                <td>$${income.amount.toFixed(2)}</td>
+                                <td>
+                                    <button class="btn btn-small" onclick="editIncome('${incomeId}')">✏️</button>
+                                    <button class="btn btn-small btn-danger" onclick="deleteIncome('${incomeId}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        // Gestión de Gastos (similar a ingresos)
+        function showAddExpenseModal() {
+            editingExpenseId = null;
+            document.getElementById('expense-form').reset();
+            document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+            loadPropertiesForDropdown('expense-property');
+            document.getElementById('expense-modal').classList.remove('hidden');
+        }
+
+        function closeExpenseModal() {
+            document.getElementById('expense-modal').classList.add('hidden');
+        }
+
+        function saveExpense(event) {
+            event.preventDefault();
+            
+            if (!currentUser) {
+                showError('❌ Debes iniciar sesión');
+                return;
+            }
+
+            const expenseData = {
+                date: new Date(document.getElementById('expense-date').value),
+                description: document.getElementById('expense-description').value.trim(),
+                category: document.getElementById('expense-category').value,
+                amount: parseFloat(document.getElementById('expense-amount').value),
+                propertyId: document.getElementById('expense-property').value || null,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                userId: currentUser.uid
+            };
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Guardando...';
+            submitBtn.disabled = true;
+
+            if (editingExpenseId) {
+                db.collection('expenses').doc(editingExpenseId).update(expenseData)
+                    .then(() => {
+                        showToast('✅ Gasto actualizado correctamente', true);
+                        closeExpenseModal();
+                        loadExpenses();
+                        updateFinanceSummary();
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+            } else {
+                expenseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                
+                db.collection('expenses').add(expenseData)
+                    .then(() => {
+                        showToast('✅ Gasto agregado correctamente', true);
+                        closeExpenseModal();
+                        loadExpenses();
+                        updateFinanceSummary();
+                    })
+                    .finally(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+            }
+        }
+
+        function loadExpenses() {
+            if (!currentUser) return;
+            
+            const expensesList = document.getElementById('expenses-list');
+            expensesList.innerHTML = '<tr><td colspan="5">Cargando gastos...</td></tr>';
+            
+            db.collection('expenses')
+                .where('userId', '==', currentUser.uid)
+                .orderBy('date', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    expensesList.innerHTML = '';
+                    
+                    if (querySnapshot.empty) {
+                        expensesList.innerHTML = '<tr><td colspan="5">No hay gastos registrados</td></tr>';
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        const expense = doc.data();
+                        const expenseId = doc.id;
+                        const date = expense.date.toDate().toLocaleDateString();
+                        
+                        expensesList.innerHTML += `
+                            <tr>
+                                <td>${date}</td>
+                                <td>${expense.description}</td>
+                                <td>${expense.category}</td>
+                                <td>$${expense.amount.toFixed(2)}</td>
+                                <td>
+                                    <button class="btn btn-small" onclick="editExpense('${expenseId}')">✏️</button>
+                                    <button class="btn btn-small btn-danger" onclick="deleteExpense('${expenseId}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                });
+        }
+
+        function loadPropertiesForDropdown(dropdownId) {
+            if (!currentUser) return;
+            
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.innerHTML = '<option value="">Ninguno</option>';
             
             db.collection('properties')
                 .where('userId', '==', currentUser.uid)
                 .get()
                 .then((querySnapshot) => {
-                    let totalRent = 0;
-                    let rentedProperties = 0;
-                    
                     querySnapshot.forEach((doc) => {
                         const property = doc.data();
-                        totalRent += property.rent;
-                        if (property.status === 'alquilado') {
-                            rentedProperties++;
-                        }
+                        dropdown.innerHTML += `<option value="${doc.id}">${property.name}</option>`;
+                    });
+                });
+        }
+
+        function updateFinanceSummary() {
+            if (!currentUser) return;
+            
+            // Calcular total de ingresos
+            let totalIncomes = 0;
+            db.collection('incomes')
+                .where('userId', '==', currentUser.uid)
+                .get()
+                .then((incomesSnapshot) => {
+                    incomesSnapshot.forEach((doc) => {
+                        totalIncomes += doc.data().amount;
                     });
                     
-                    // Actualizar resumen
-                    document.getElementById('ingresos-mes').textContent = '$' + totalRent.toFixed(2);
-                    document.getElementById('alquiler-mes').textContent = '$' + totalRent.toFixed(2);
-                    document.getElementById('gastos-mes').textContent = '$0'; // Por implementar
-                    document.getElementById('ganancia-mes').textContent = '$' + totalRent.toFixed(2);
-                })
-                .catch((error) => {
-                    console.error('Error al calcular resumen:', error);
+                    // Calcular total de gastos
+                    let totalExpenses = 0;
+                    return db.collection('expenses')
+                        .where('userId', '==', currentUser.uid)
+                        .get()
+                        .then((expensesSnapshot) => {
+                            expensesSnapshot.forEach((doc) => {
+                                totalExpenses += doc.data().amount;
+                            });
+                            
+                            // Calcular ingresos por inmuebles
+                            let propertyIncomes = 0;
+                            return db.collection('properties')
+                                .where('userId', '==', currentUser.uid)
+                                .get()
+                                .then((propertiesSnapshot) => {
+                                    propertiesSnapshot.forEach((doc) => {
+                                        const property = doc.data();
+                                        if (property.status === 'alquilado') {
+                                            propertyIncomes += property.rent;
+                                        }
+                                    });
+                                    
+                                    // Actualizar la interfaz
+                                    document.getElementById('total-ingresos').textContent = '$' + totalIncomes.toFixed(2);
+                                    document.getElementById('total-gastos').textContent = '$' + totalExpenses.toFixed(2);
+                                    document.getElementById('balance-total').textContent = '$' + (totalIncomes - totalExpenses).toFixed(2);
+                                    document.getElementById('ingresos-inmuebles').textContent = '$' + propertyIncomes.toFixed(2);
+                                });
+                        });
                 });
+        }
+
+        // Funciones auxiliares (edit/delete para ingresos y gastos)
+        function editIncome(incomeId) {
+            // Implementar edición de ingreso
+            showToast('✏️ Función de edición en desarrollo', false);
+        }
+
+        function deleteIncome(incomeId) {
+            if (confirm('¿Estás seguro de eliminar este ingreso?')) {
+                db.collection('incomes').doc(incomeId).delete()
+                    .then(() => {
+                        showToast('✅ Ingreso eliminado', true);
+                        loadIncomes();
+                        updateFinanceSummary();
+                    });
+            }
+        }
+
+        function editExpense(expenseId) {
+            // Implementar edición de gasto
+            showToast('✏️ Función de edición en desarrollo', false);
+        }
+
+        function deleteExpense(expenseId) {
+            if (confirm('¿Estás seguro de eliminar este gasto?')) {
+                db.collection('expenses').doc(expenseId).delete()
+                    .then(() => {
+                        showToast('✅ Gasto eliminado', true);
+                        loadExpenses();
+                        updateFinanceSummary();
+                    });
+            }
+        }
+
+        // Función para verificar conexión a Firebase
+        function checkFirebaseConnection() {
+            console.log('🔍 Verificando conexión Firebase...');
+            console.log('Usuario actual:', auth.currentUser);
         }
 
         // Verificar estado de autenticación
@@ -932,7 +1694,17 @@
         // Inicialización
         window.addEventListener('load', function() {
             document.getElementById('loading-screen').classList.remove('hidden');
-            console.log('Aplicación cargada, verificando autenticación...');
+        });
+
+        // Establecer fecha actual por defecto en los modales
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            if (document.getElementById('income-date')) {
+                document.getElementById('income-date').value = today;
+            }
+            if (document.getElementById('expense-date')) {
+                document.getElementById('expense-date').value = today;
+            }
         });
     </script>
 </body>
