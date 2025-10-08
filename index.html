@@ -161,6 +161,8 @@
 
     // ===== LÓGICA DE UI Y EVENTOS =====
     let editingPropIndex = null;
+    function openSection(id) { $('#panel-overlay').classList.add('open'); $(`#${id}`)?.classList.add('open'); }
+    function closeSection(id) { $(`#${id}`)?.classList.remove('open'); if (!$$('.section-panel.open').length) $('#panel-overlay').classList.remove('open');}
     function startEditProp(index) {
         editingPropIndex = index;
         const p = state.propiedades[index];
@@ -185,7 +187,7 @@
             response = `Tus propiedades son: <ul>` + state.propiedades.map(p => `<li>${p.nombre}</li>`).join('') + `</ul>`;
         } else if (q.includes('resumen')) {
             const ym = toYM(new Date().toISOString());
-            const sum = (list, filter, key) => list.filter(filter).reduce((s, r) => s + Number(r[key] || 0), 0);
+            const sum = (list, filter, key) => (list||[]).filter(filter).reduce((s, r) => s + Number(r[key] || 0), 0);
             const ingM = sum(state.ingresos, r => toYM(r.fecha) === ym, 'monto');
             const alqM = sum(state.alquileres, a => a.mes === ym && a.pagado, 'monto');
             const gasM = sum(state.gastos, r => toYM(r.fecha) === ym, 'monto');
@@ -221,10 +223,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- 1. ACTIVAR LISTENERS DE UI BÁSICOS ---
         const overlay = $('#panel-overlay');
-        const openSection = (id) => { overlay.classList.add('open'); $(`#${id}`)?.classList.add('open'); };
-        const closeSection = (id) => { $(`#${id}`)?.classList.remove('open'); if (!$$('.section-panel.open').length) overlay.classList.remove('open');};
-        
-        $('#panel-overlay').addEventListener('click', () => $$('.section-panel.open').forEach(p => closeSection(p.id)));
+        overlay.addEventListener('click', () => $$('.section-panel.open').forEach(p => closeSection(p.closest('.section-panel').id)));
         $$('.section-launcher').forEach(launcher => launcher.addEventListener('click', () => openSection(launcher.dataset.panel)));
         $$('.btn-close-section').forEach(btn => btn.addEventListener('click', () => closeSection(btn.closest('.section-panel').id)));
         
@@ -284,7 +283,6 @@
         onAuthStateChanged(auth, user => {
             if (user) {
                 userDocRef = doc(db, "users", user.uid);
-                authReadyResolver();
                 onSnapshot(userDocRef, (doc) => {
                     const data = doc.exists() ? doc.data() : {};
                     Object.keys(state).forEach(key => { state[key] = data[key] || []; });
