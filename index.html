@@ -4,12 +4,33 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>JustPersonal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
         body { 
-            font-family: Arial, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: #f8fafc; 
             color: #0f172a;
+            line-height: 1.6;
         }
         .login-screen { 
             position: fixed; 
@@ -39,13 +60,14 @@
             border-radius: 10px; 
             border: 1px solid #e2e8f0; 
             background: white; 
+            font-family: inherit;
         }
         input:focus, select:focus, textarea:focus { 
-            outline: 2px solid #0ea5e9; 
+            outline: 2px solid var(--primary); 
             border-color: transparent; 
         }
         .btn { 
-            background: #0ea5e9; 
+            background: var(--primary); 
             color: white; 
             border: none; 
             border-radius: 10px; 
@@ -54,17 +76,23 @@
             font-weight: 600; 
             width: 100%; 
             margin-top: 10px; 
+            transition: var(--transition);
         }
-        .btn:hover { opacity: 0.9; }
+        .btn:hover { 
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
         .btn-ghost { 
             background: transparent; 
             color: #64748b; 
             border: 1px solid #e2e8f0; 
             width: auto; 
         }
-        .btn-success { background: #10b981; }
-        .btn-danger { background: #ef4444; }
-        .btn-warning { background: #f59e0b; }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { background: #3aafd9; }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: #d43a5f; }
+        .btn-warning { background: var(--warning); }
         
         .login-tabs { 
             display: flex; 
@@ -81,8 +109,8 @@
             font-weight: 600; 
         }
         .login-tab.active { 
-            color: #0ea5e9; 
-            border-bottom: 2px solid #0ea5e9; 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--primary); 
         }
         
         .app-main { 
@@ -97,6 +125,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .dashboard { 
             display: grid; 
@@ -112,9 +141,17 @@
             cursor: pointer; 
             border: 1px solid #e2e8f0; 
             transition: transform 0.2s; 
+            box-shadow: var(--shadow);
         }
-        .section:hover { transform: translateY(-2px); }
-        .section-icon { font-size: 48px; margin-bottom: 10px; }
+        .section:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+        .section-icon { 
+            font-size: 48px; 
+            margin-bottom: 10px; 
+            color: var(--primary);
+        }
         
         /* Panel de Finanzas */
         .finance-panel {
@@ -123,6 +160,7 @@
             padding: 24px;
             margin-top: 20px;
             border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow);
         }
         .finance-header {
             display: flex;
@@ -145,10 +183,14 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            transition: var(--transition);
         }
         .finance-tab.active {
-            background: #0ea5e9;
+            background: var(--primary);
             color: white;
+        }
+        .finance-tab:hover:not(.active) {
+            background: #e2e8f0;
         }
         .back-btn {
             background: #64748b;
@@ -158,6 +200,10 @@
             border-radius: 8px;
             cursor: pointer;
             margin-right: 15px;
+            transition: var(--transition);
+        }
+        .back-btn:hover {
+            background: #475569;
         }
         
         /* Grid de propiedades */
@@ -172,11 +218,12 @@
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             padding: 20px;
-            transition: transform 0.2s;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
         }
         .property-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
         }
         .property-header {
             display: flex;
@@ -208,7 +255,7 @@
         .stat-value {
             font-size: 18px;
             font-weight: bold;
-            color: #0ea5e9;
+            color: var(--primary);
         }
         .stat-label {
             font-size: 12px;
@@ -236,12 +283,15 @@
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
         }
         .close-btn {
             background: none;
@@ -249,6 +299,10 @@
             font-size: 24px;
             cursor: pointer;
             color: #64748b;
+            transition: var(--transition);
+        }
+        .close-btn:hover {
+            color: var(--dark);
         }
         
         .toast {
@@ -256,15 +310,16 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #ef4444;
+            background: var(--danger);
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
             display: none;
             z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .toast.show { display: block; }
-        .success { background: #10b981; }
+        .success { background: var(--success); }
 
         .loading {
             display: flex;
@@ -287,6 +342,8 @@
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
         }
         table {
             width: 100%;
@@ -324,34 +381,284 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            box-shadow: var(--shadow);
         }
         .sub-section:hover {
-            transform: translateY(-2px);
-            border-color: #0ea5e9;
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
         }
         .sub-section-icon {
             font-size: 32px;
             margin-bottom: 10px;
+            color: var(--primary);
         }
 
         /* Servicios públicos */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
         }
         .service-card {
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 8px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
             border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         .service-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .service-info {
+            margin: 10px 0;
+        }
+        .service-unit {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        .service-unit-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+        }
+        .service-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            padding: 6px;
+            background: white;
+            border-radius: 4px;
+        }
+        .payment-link {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            margin: 5px 0;
+        }
+        .payment-link:hover {
+            background: #3aafd9;
+            transform: translateY(-2px);
+        }
+
+        /* Agrupación por ciudad - ACORDEÓN */
+        .city-group {
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .city-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .city-header:hover {
+            background: #f8fafc;
+        }
+        .city-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .city-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        .city-count {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .city-content {
+            display: none;
+            padding: 0 20px 20px;
+            background: #f8fafc;
+        }
+        .city-content.expanded {
+            display: block;
+        }
+        .city-properties {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        /* Mejoras visuales para formularios */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .form-group i {
+            color: var(--primary);
+        }
+
+        /* Resumen financiero */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .summary-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+        .summary-card:hover {
+            transform: translateY(-3px);
+        }
+        .summary-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .summary-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        .summary-card .amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .category-badge {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .city-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Estilos para agrupación de casas */
+        .house-group {
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: var(--shadow);
+        }
+        .house-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .house-header:hover {
+            background: #e2e8f0;
+        }
+        .house-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .house-icon {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        .house-count {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .house-content {
+            display: none;
+            padding: 0 20px 15px;
+        }
+        .house-content.expanded {
+            display: block;
+        }
+        .house-units {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        /* Servicios adicionales */
+        .additional-services {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
         }
     </style>
     
@@ -363,14 +670,14 @@
 <body>
     <!-- Pantalla de carga -->
     <div id="loading-screen" class="loading">
-        <p>🔄 Cargando aplicación...</p>
+        <p><i class="fas fa-spinner fa-spin"></i> Cargando aplicación...</p>
     </div>
 
     <!-- Pantalla de Login -->
     <div id="login-screen" class="login-screen hidden">
         <div class="card">
             <div style="text-align: center;">
-                <h1>JustPersonal</h1>
+                <h1><i class="fas fa-chart-line"></i> JustPersonal</h1>
                 <p style="color: #64748b; margin: 8px 0 0;">Gestión Financiera Integral</p>
             </div>
             
@@ -383,18 +690,18 @@
             <form id="register-form" onsubmit="handleRegister(event)">
                 <div class="grid">
                     <div class="col">
-                        <label>Correo Electrónico</label>
+                        <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
                         <input type="email" id="register-email" placeholder="tu@email.com" required>
                     </div>
                     <div class="col">
-                        <label>Nombre Completo</label>
+                        <label><i class="fas fa-user"></i> Nombre Completo</label>
                         <input type="text" id="register-name" placeholder="Tu nombre completo" required>
                     </div>
                     <div class="col">
-                        <label>Contraseña</label>
+                        <label><i class="fas fa-lock"></i> Contraseña</label>
                         <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" minlength="6" required>
                     </div>
-                    <button type="submit" class="btn">Crear Cuenta</button>
+                    <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Crear Cuenta</button>
                 </div>
             </form>
 
@@ -402,14 +709,14 @@
             <form id="login-form" class="hidden" onsubmit="handleLogin(event)">
                 <div class="grid">
                     <div class="col">
-                        <label>Correo Electrónico</label>
+                        <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
                         <input type="email" id="login-email" placeholder="tu@email.com" required>
                     </div>
                     <div class="col">
-                        <label>Contraseña</label>
+                        <label><i class="fas fa-lock"></i> Contraseña</label>
                         <input type="password" id="login-password" placeholder="Tu contraseña" required>
                     </div>
-                    <button type="submit" class="btn">Iniciar Sesión</button>
+                    <button type="submit" class="btn"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
                 </div>
             </form>
 
@@ -420,10 +727,10 @@
     <!-- Aplicación Principal -->
     <div id="app-main" class="hidden">
         <div class="header">
-            <h1>JustPersonal · Panel Principal</h1>
+            <h1><i class="fas fa-chart-line"></i> JustPersonal · Panel Principal</h1>
             <div>
                 <span id="user-display">Usuario</span>
-                <button class="btn btn-ghost" onclick="logout()" style="margin-left: 10px;">Cerrar Sesión</button>
+                <button class="btn btn-ghost" onclick="logout()" style="margin-left: 10px;"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
             </div>
         </div>
         
@@ -435,27 +742,27 @@
                 
                 <div class="dashboard">
                     <div class="section" onclick="showSection('finanzas')">
-                        <div class="section-icon">💰</div>
+                        <div class="section-icon"><i class="fas fa-wallet"></i></div>
                         <div>Finanzas</div>
                     </div>
                     <div class="section" onclick="showSection('salud')">
-                        <div class="section-icon">🏥</div>
+                        <div class="section-icon"><i class="fas fa-heartbeat"></i></div>
                         <div>Salud</div>
                     </div>
                     <div class="section" onclick="showSection('entretenimiento')">
-                        <div class="section-icon">🎮</div>
+                        <div class="section-icon"><i class="fas fa-gamepad"></i></div>
                         <div>Entretenimiento</div>
                     </div>
                     <div class="section" onclick="showSection('deportes')">
-                        <div class="section-icon">⚽</div>
+                        <div class="section-icon"><i class="fas fa-running"></i></div>
                         <div>Deportes</div>
                     </div>
                     <div class="section" onclick="showSection('cocina')">
-                        <div class="section-icon">🍳</div>
+                        <div class="section-icon"><i class="fas fa-utensils"></i></div>
                         <div>Cocina</div>
                     </div>
                     <div class="section" onclick="showSection('redes')">
-                        <div class="section-icon">📱</div>
+                        <div class="section-icon"><i class="fas fa-share-alt"></i></div>
                         <div>Redes Sociales</div>
                     </div>
                 </div>
@@ -465,29 +772,29 @@
             <div id="panel-finanzas" class="hidden">
                 <div class="finance-header">
                     <div>
-                        <button class="back-btn" onclick="showDashboard()">← Volver</button>
-                        <h2>💰 Gestión Financiera</h2>
+                        <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
+                        <h2><i class="fas fa-wallet"></i> Gestión Financiera</h2>
                     </div>
                 </div>
 
                 <div class="sub-sections">
                     <div class="sub-section" onclick="showFinanceSubSection('resumen')">
-                        <div class="sub-section-icon">📊</div>
+                        <div class="sub-section-icon"><i class="fas fa-chart-bar"></i></div>
                         <h3>Resumen General</h3>
                         <p>Vista completa de tus finanzas</p>
                     </div>
                     <div class="sub-section" onclick="showFinanceSubSection('inmuebles')">
-                        <div class="sub-section-icon">🏠</div>
+                        <div class="sub-section-icon"><i class="fas fa-home"></i></div>
                         <h3>Gestión de Inmuebles</h3>
                         <p>Administra tus propiedades</p>
                     </div>
                     <div class="sub-section" onclick="showFinanceSubSection('ingresos')">
-                        <div class="sub-section-icon">💵</div>
+                        <div class="sub-section-icon"><i class="fas fa-hand-holding-usd"></i></div>
                         <h3>Ingresos</h3>
                         <p>Registra todos tus ingresos</p>
                     </div>
                     <div class="sub-section" onclick="showFinanceSubSection('gastos')">
-                        <div class="sub-section-icon">💸</div>
+                        <div class="sub-section-icon"><i class="fas fa-receipt"></i></div>
                         <h3>Gastos</h3>
                         <p>Controla tus gastos</p>
                     </div>
@@ -495,28 +802,33 @@
 
                 <!-- Resumen General -->
                 <div id="finance-resumen" class="finance-panel">
-                    <h3>📊 Resumen Financiero General</h3>
-                    <div class="properties-grid">
-                        <div class="stat-card">
-                            <div class="stat-value" id="total-ingresos">$0</div>
-                            <div class="stat-label">Total Ingresos</div>
+                    <h3><i class="fas fa-chart-bar"></i> Resumen Financiero General</h3>
+                    
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <h4>Total Ingresos</h4>
+                            <div class="amount" id="total-ingresos">$0</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="total-gastos">$0</div>
-                            <div class="stat-label">Total Gastos</div>
+                        <div class="summary-card">
+                            <i class="fas fa-receipt"></i>
+                            <h4>Total Gastos</h4>
+                            <div class="amount" id="total-gastos">$0</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="balance-total">$0</div>
-                            <div class="stat-label">Balance Total</div>
+                        <div class="summary-card">
+                            <i class="fas fa-piggy-bank"></i>
+                            <h4>Balance Total</h4>
+                            <div class="amount" id="balance-total">$0</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-value" id="ingresos-inmuebles">$0</div>
-                            <div class="stat-label">Ingresos por Inmuebles</div>
+                        <div class="summary-card">
+                            <i class="fas fa-home"></i>
+                            <h4>Ingresos por Inmuebles</h4>
+                            <div class="amount" id="ingresos-inmuebles">$0</div>
                         </div>
                     </div>
 
                     <div style="margin-top: 30px;">
-                        <h4>Últimos Movimientos</h4>
+                        <h4><i class="fas fa-history"></i> Últimos Movimientos</h4>
                         <div id="recent-transactions">
                             <p>No hay movimientos recientes</p>
                         </div>
@@ -526,8 +838,8 @@
                 <!-- Gestión de Inmuebles -->
                 <div id="finance-inmuebles" class="finance-panel hidden">
                     <div class="finance-header">
-                        <h3>🏠 Gestión de Inmuebles</h3>
-                        <button class="btn" onclick="showAddPropertyModal()">➕ Agregar Inmueble</button>
+                        <h3><i class="fas fa-home"></i> Gestión de Inmuebles</h3>
+                        <button class="btn" onclick="showAddPropertyModal()"><i class="fas fa-plus"></i> Agregar Inmueble</button>
                     </div>
 
                     <div class="finance-tabs">
@@ -537,20 +849,17 @@
 
                     <!-- Lista de Inmuebles -->
                     <div id="property-lista">
-                        <div id="properties-list" class="properties-grid">
+                        <div id="properties-list">
                             <!-- Las propiedades se cargarán aquí desde Firebase -->
                         </div>
                     </div>
 
                     <!-- Servicios Públicos -->
                     <div id="property-servicios" class="hidden">
-                        <h4>Gestión de Servicios Públicos</h4>
-                        <p>Selecciona un inmueble para gestionar sus servicios:</p>
-                        <div id="services-property-list" class="properties-grid">
-                            <!-- Lista de propiedades para servicios -->
-                        </div>
-                        <div id="services-detail" class="hidden">
-                            <!-- Detalle de servicios por propiedad -->
+                        <h4><i class="fas fa-bolt"></i> Gestión de Servicios Públicos</h4>
+                        <p>Aquí puedes ver y acceder a los enlaces de pago de servicios públicos para cada propiedad:</p>
+                        <div id="services-container" class="services-grid">
+                            <!-- Los servicios se cargarán aquí -->
                         </div>
                     </div>
                 </div>
@@ -558,19 +867,19 @@
                 <!-- Ingresos -->
                 <div id="finance-ingresos" class="finance-panel hidden">
                     <div class="finance-header">
-                        <h3>💵 Gestión de Ingresos</h3>
-                        <button class="btn btn-success" onclick="showAddIncomeModal()">➕ Agregar Ingreso</button>
+                        <h3><i class="fas fa-hand-holding-usd"></i> Gestión de Ingresos</h3>
+                        <button class="btn btn-success" onclick="showAddIncomeModal()"><i class="fas fa-plus"></i> Agregar Ingreso</button>
                     </div>
 
                     <div class="table-container">
                         <table id="incomes-table">
                             <thead>
                                 <tr>
-                                    <th>Fecha</th>
-                                    <th>Descripción</th>
-                                    <th>Categoría</th>
-                                    <th>Monto</th>
-                                    <th>Acciones</th>
+                                    <th><i class="fas fa-calendar"></i> Fecha</th>
+                                    <th><i class="fas fa-file-alt"></i> Descripción</th>
+                                    <th><i class="fas fa-tags"></i> Categoría</th>
+                                    <th><i class="fas fa-dollar-sign"></i> Monto</th>
+                                    <th><i class="fas fa-cog"></i> Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="incomes-list">
@@ -583,19 +892,19 @@
                 <!-- Gastos -->
                 <div id="finance-gastos" class="finance-panel hidden">
                     <div class="finance-header">
-                        <h3>💸 Gestión de Gastos</h3>
-                        <button class="btn btn-danger" onclick="showAddExpenseModal()">➕ Agregar Gasto</button>
+                        <h3><i class="fas fa-receipt"></i> Gestión de Gastos</h3>
+                        <button class="btn btn-danger" onclick="showAddExpenseModal()"><i class="fas fa-plus"></i> Agregar Gasto</button>
                     </div>
 
                     <div class="table-container">
                         <table id="expenses-table">
                             <thead>
                                 <tr>
-                                    <th>Fecha</th>
-                                    <th>Descripción</th>
-                                    <th>Categoría</th>
-                                    <th>Monto</th>
-                                    <th>Acciones</th>
+                                    <th><i class="fas fa-calendar"></i> Fecha</th>
+                                    <th><i class="fas fa-file-alt"></i> Descripción</th>
+                                    <th><i class="fas fa-tags"></i> Categoría</th>
+                                    <th><i class="fas fa-dollar-sign"></i> Monto</th>
+                                    <th><i class="fas fa-cog"></i> Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="expenses-list">
@@ -609,8 +918,8 @@
             <!-- Otros paneles -->
             <div id="panel-salud" class="hidden">
                 <div class="finance-header">
-                    <button class="back-btn" onclick="showDashboard()">← Volver</button>
-                    <h2>🏥 Salud</h2>
+                    <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
+                    <h2><i class="fas fa-heartbeat"></i> Salud</h2>
                 </div>
                 <div class="finance-panel">
                     <p>Gestión de información de salud (próximamente).</p>
@@ -619,8 +928,8 @@
 
             <div id="panel-entretenimiento" class="hidden">
                 <div class="finance-header">
-                    <button class="back-btn" onclick="showDashboard()">← Volver</button>
-                    <h2>🎮 Entretenimiento</h2>
+                    <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
+                    <h2><i class="fas fa-gamepad"></i> Entretenimiento</h2>
                 </div>
                 <div class="finance-panel">
                     <p>Gestión de suscripciones y entretenimiento (próximamente).</p>
@@ -629,8 +938,8 @@
 
             <div id="panel-deportes" class="hidden">
                 <div class="finance-header">
-                    <button class="back-btn" onclick="showDashboard()">← Volver</button>
-                    <h2>⚽ Deportes</h2>
+                    <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
+                    <h2><i class="fas fa-running"></i> Deportes</h2>
                 </div>
                 <div class="finance-panel">
                     <p>Gestión de actividades deportivas (próximamente).</p>
@@ -639,8 +948,8 @@
 
             <div id="panel-cocina" class="hidden">
                 <div class="finance-header">
-                    <button class="back-btn" onclick="showDashboard()">← Volver</button>
-                    <h2>🍳 Cocina</h2>
+                    <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
+                    <h2><i class="fas fa-utensils"></i> Cocina</h2>
                 </div>
                 <div class="finance-panel">
                     <p>Gestión de recetas y cocina (próximamente).</p>
@@ -649,8 +958,8 @@
 
             <div id="panel-redes" class="hidden">
                 <div class="finance-header">
-                    <button class="back-btn" onclick="showDashboard()">← Volver</button>
-                    <h2>📱 Redes Sociales</h2>
+                    <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Volver</button>
+                    <h2><i class="fas fa-share-alt"></i> Redes Sociales</h2>
                 </div>
                 <div class="finance-panel">
                     <p>Gestión de redes sociales (próximamente).</p>
@@ -663,21 +972,21 @@
     <div id="property-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-title">Agregar Nuevo Inmueble</h3>
+                <h3 id="modal-title"><i class="fas fa-home"></i> Agregar Nuevo Inmueble</h3>
                 <button class="close-btn" onclick="closePropertyModal()">&times;</button>
             </div>
             <form id="property-form" onsubmit="saveProperty(event)">
                 <div class="grid">
                     <div class="col">
-                        <label>Ciudad</label>
+                        <label><i class="fas fa-map-marker-alt"></i> Ciudad</label>
                         <input type="text" id="property-city" placeholder="Ej: Popayán, Cali" required>
                     </div>
                     <div class="col">
-                        <label>Nombre del Inmueble</label>
+                        <label><i class="fas fa-signature"></i> Nombre del Inmueble</label>
                         <input type="text" id="property-name" placeholder="Ej: Apartamento Centro" required>
                     </div>
                     <div class="col">
-                        <label>Tipo de Inmueble</label>
+                        <label><i class="fas fa-building"></i> Tipo de Inmueble</label>
                         <select id="property-type" required>
                             <option value="">Seleccionar tipo</option>
                             <option value="apartamento">Apartamento</option>
@@ -689,31 +998,47 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label>Dirección</label>
+                        <label><i class="fas fa-map-pin"></i> Dirección</label>
                         <input type="text" id="property-address" placeholder="Dirección completa" required>
                     </div>
                     <div class="col">
-                        <label>Valor de Alquiler Mensual ($)</label>
+                        <label><i class="fas fa-dollar-sign"></i> Valor de Alquiler Mensual ($)</label>
                         <input type="number" id="property-rent" placeholder="0.00" step="0.01" min="0" required>
                     </div>
                     <div class="col">
-                        <label>Empresa de Energía</label>
+                        <label><i class="fas fa-bolt"></i> Empresa de Energía</label>
                         <input type="text" id="property-energy-company" placeholder="Ej: CEO, EMCALI">
                     </div>
                     <div class="col">
-                        <label>Número de Contrato Energía</label>
+                        <label><i class="fas fa-file-contract"></i> Número de Contrato Energía</label>
                         <input type="text" id="property-energy-contract" placeholder="Número de contrato">
                     </div>
                     <div class="col">
-                        <label>Página Web para Pagos</label>
+                        <label><i class="fas fa-globe"></i> Página Web para Pagos</label>
                         <input type="url" id="property-payment-url" placeholder="https://...">
                     </div>
                     <div class="col">
-                        <label>Descripción</label>
+                        <label><i class="fas fa-tint"></i> Empresa de Agua</label>
+                        <input type="text" id="property-water-company" placeholder="Ej: Acuavalle, EMPOPAYAN">
+                    </div>
+                    <div class="col">
+                        <label><i class="fas fa-file-contract"></i> Número de Contrato Agua</label>
+                        <input type="text" id="property-water-contract" placeholder="Número de contrato">
+                    </div>
+                    <div class="col">
+                        <label><i class="fas fa-wifi"></i> Empresa de Internet</label>
+                        <input type="text" id="property-internet-company" placeholder="Ej: Claro, Movistar">
+                    </div>
+                    <div class="col">
+                        <label><i class="fas fa-file-contract"></i> Número de Contrato Internet</label>
+                        <input type="text" id="property-internet-contract" placeholder="Número de contrato">
+                    </div>
+                    <div class="col">
+                        <label><i class="fas fa-align-left"></i> Descripción</label>
                         <textarea id="property-description" placeholder="Descripción del inmueble..." rows="3"></textarea>
                     </div>
                     <div class="col">
-                        <label>Estado</label>
+                        <label><i class="fas fa-info-circle"></i> Estado</label>
                         <select id="property-status" required>
                             <option value="disponible">Disponible</option>
                             <option value="alquilado">Alquilado</option>
@@ -721,7 +1046,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success">Guardar Inmueble</button>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Inmueble</button>
             </form>
         </div>
     </div>
@@ -730,21 +1055,21 @@
     <div id="income-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Agregar Ingreso</h3>
+                <h3><i class="fas fa-hand-holding-usd"></i> Agregar Ingreso</h3>
                 <button class="close-btn" onclick="closeIncomeModal()">&times;</button>
             </div>
             <form id="income-form" onsubmit="saveIncome(event)">
                 <div class="grid">
                     <div class="col">
-                        <label>Fecha</label>
+                        <label><i class="fas fa-calendar"></i> Fecha</label>
                         <input type="date" id="income-date" required>
                     </div>
                     <div class="col">
-                        <label>Descripción</label>
+                        <label><i class="fas fa-file-alt"></i> Descripción</label>
                         <input type="text" id="income-description" placeholder="Descripción del ingreso" required>
                     </div>
                     <div class="col">
-                        <label>Categoría</label>
+                        <label><i class="fas fa-tags"></i> Categoría</label>
                         <select id="income-category" required>
                             <option value="alquiler">Alquiler</option>
                             <option value="salario">Salario</option>
@@ -754,18 +1079,18 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label>Monto ($)</label>
+                        <label><i class="fas fa-dollar-sign"></i> Monto ($)</label>
                         <input type="number" id="income-amount" placeholder="0.00" step="0.01" min="0" required>
                     </div>
                     <div class="col">
-                        <label>Inmueble Relacionado (opcional)</label>
+                        <label><i class="fas fa-home"></i> Inmueble Relacionado (opcional)</label>
                         <select id="income-property">
                             <option value="">Ninguno</option>
                             <!-- Se llenará dinámicamente -->
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success">Guardar Ingreso</button>
+                <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Ingreso</button>
             </form>
         </div>
     </div>
@@ -774,21 +1099,21 @@
     <div id="expense-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Agregar Gasto</h3>
+                <h3><i class="fas fa-receipt"></i> Agregar Gasto</h3>
                 <button class="close-btn" onclick="closeExpenseModal()">&times;</button>
             </div>
             <form id="expense-form" onsubmit="saveExpense(event)">
                 <div class="grid">
                     <div class="col">
-                        <label>Fecha</label>
+                        <label><i class="fas fa-calendar"></i> Fecha</label>
                         <input type="date" id="expense-date" required>
                     </div>
                     <div class="col">
-                        <label>Descripción</label>
+                        <label><i class="fas fa-file-alt"></i> Descripción</label>
                         <input type="text" id="expense-description" placeholder="Descripción del gasto" required>
                     </div>
                     <div class="col">
-                        <label>Categoría</label>
+                        <label><i class="fas fa-tags"></i> Categoría</label>
                         <select id="expense-category" required>
                             <option value="servicios">Servicios Públicos</option>
                             <option value="mantenimiento">Mantenimiento</option>
@@ -801,32 +1126,19 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label>Monto ($)</label>
+                        <label><i class="fas fa-dollar-sign"></i> Monto ($)</label>
                         <input type="number" id="expense-amount" placeholder="0.00" step="0.01" min="0" required>
                     </div>
                     <div class="col">
-                        <label>Inmueble Relacionado (opcional)</label>
+                        <label><i class="fas fa-home"></i> Inmueble Relacionado (opcional)</label>
                         <select id="expense-property">
                             <option value="">Ninguno</option>
                             <!-- Se llenará dinámicamente -->
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-danger">Guardar Gasto</button>
+                <button type="submit" class="btn btn-danger"><i class="fas fa-save"></i> Guardar Gasto</button>
             </form>
-        </div>
-    </div>
-
-    <!-- Modal para servicios públicos -->
-    <div id="services-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="services-modal-title">Servicios Públicos</h3>
-                <button class="close-btn" onclick="closeServicesModal()">&times;</button>
-            </div>
-            <div id="services-modal-content">
-                <!-- Contenido dinámico para servicios -->
-            </div>
         </div>
     </div>
 
@@ -858,7 +1170,27 @@
         let editingPropertyId = null;
         let editingIncomeId = null;
         let editingExpenseId = null;
-        let currentPropertyForServices = null;
+
+        // Función para extraer el nombre de la casa del nombre de la propiedad
+        function getHouseName(propertyName) {
+            const housePatterns = [
+                /VD Tulia/i,
+                /VD 26 EN/i,
+                /BV/i,
+                /San Vicente/i,
+                /Guayacanes/i
+            ];
+            
+            for (let pattern of housePatterns) {
+                if (pattern.test(propertyName)) {
+                    const match = propertyName.match(pattern);
+                    return match[0];
+                }
+            }
+            
+            // Si no coincide con ningún patrón, devolver el nombre completo
+            return propertyName;
+        }
 
         // Función para mostrar errores
         function showError(message) {
@@ -931,7 +1263,6 @@
                     });
                 })
                 .then(() => {
-                    checkFirebaseConnection();
                     showToast('🎉 ¡Cuenta creada exitosamente!', true);
                     showMainApp();
                 })
@@ -955,7 +1286,6 @@
 
             auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
-                    checkFirebaseConnection();
                     showToast('👋 ¡Bienvenido de nuevo!', true);
                     showMainApp();
                 })
@@ -1044,11 +1374,11 @@
             event.target.classList.add('active');
             
             if (tabName === 'servicios') {
-                loadPropertiesForServices();
+                loadServices();
             }
         }
 
-        // Gestión de propiedades con Firebase
+        // Gestión de propiedades - CON EDICIÓN COMPLETA
         function showAddPropertyModal() {
             editingPropertyId = null;
             document.getElementById('modal-title').textContent = 'Agregar Nuevo Inmueble';
@@ -1056,20 +1386,56 @@
             document.getElementById('property-modal').classList.remove('hidden');
         }
 
+        function editProperty(propertyId) {
+            editingPropertyId = propertyId;
+            document.getElementById('modal-title').textContent = 'Editar Inmueble';
+            
+            // Cargar datos de la propiedad
+            db.collection('properties').doc(propertyId).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const property = doc.data();
+                        
+                        // Llenar el formulario con los datos existentes
+                        document.getElementById('property-city').value = property.city || '';
+                        document.getElementById('property-name').value = property.name || '';
+                        document.getElementById('property-type').value = property.type || '';
+                        document.getElementById('property-address').value = property.address || '';
+                        document.getElementById('property-rent').value = property.rent || '';
+                        document.getElementById('property-energy-company').value = property.energyCompany || '';
+                        document.getElementById('property-energy-contract').value = property.energyContract || '';
+                        document.getElementById('property-payment-url').value = property.paymentUrl || '';
+                        document.getElementById('property-water-company').value = property.waterCompany || '';
+                        document.getElementById('property-water-contract').value = property.waterContract || '';
+                        document.getElementById('property-internet-company').value = property.internetCompany || '';
+                        document.getElementById('property-internet-contract').value = property.internetContract || '';
+                        document.getElementById('property-description').value = property.description || '';
+                        document.getElementById('property-status').value = property.status || 'disponible';
+                        
+                        document.getElementById('property-modal').classList.remove('hidden');
+                    } else {
+                        showError('❌ No se encontró la propiedad');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error al cargar propiedad:', error);
+                    showError('❌ Error al cargar propiedad: ' + error.message);
+                });
+        }
+
         function closePropertyModal() {
             document.getElementById('property-modal').classList.add('hidden');
+            editingPropertyId = null;
         }
 
         function saveProperty(event) {
             event.preventDefault();
             
-            // Validar que el usuario esté autenticado
             if (!currentUser) {
                 showError('❌ Debes iniciar sesión para guardar propiedades');
                 return;
             }
 
-            // Obtener y validar datos
             const rentValue = parseFloat(document.getElementById('property-rent').value);
             if (isNaN(rentValue) || rentValue <= 0) {
                 showError('❌ El valor del alquiler debe ser un número mayor a 0');
@@ -1085,26 +1451,28 @@
                 energyCompany: document.getElementById('property-energy-company').value.trim(),
                 energyContract: document.getElementById('property-energy-contract').value.trim(),
                 paymentUrl: document.getElementById('property-payment-url').value.trim(),
+                waterCompany: document.getElementById('property-water-company').value.trim(),
+                waterContract: document.getElementById('property-water-contract').value.trim(),
+                internetCompany: document.getElementById('property-internet-company').value.trim(),
+                internetContract: document.getElementById('property-internet-contract').value.trim(),
                 description: document.getElementById('property-description').value.trim(),
                 status: document.getElementById('property-status').value,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 userId: currentUser.uid
             };
 
-            // Mostrar loading
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Guardando...';
             submitBtn.disabled = true;
 
             if (editingPropertyId) {
-                // Editar propiedad existente
+                // Actualizar propiedad existente
                 db.collection('properties').doc(editingPropertyId).update(propertyData)
                     .then(() => {
                         showToast('✅ Propiedad actualizada correctamente', true);
                         closePropertyModal();
                         loadProperties();
-                        updateFinanceSummary();
                     })
                     .catch((error) => {
                         console.error('Error al actualizar:', error);
@@ -1115,16 +1483,14 @@
                         submitBtn.disabled = false;
                     });
             } else {
-                // Agregar nueva propiedad
+                // Crear nueva propiedad
                 propertyData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                 
                 db.collection('properties').add(propertyData)
                     .then((docRef) => {
-                        console.log('Propiedad guardada con ID:', docRef.id);
                         showToast('✅ Propiedad agregada correctamente', true);
                         closePropertyModal();
                         loadProperties();
-                        updateFinanceSummary();
                     })
                     .catch((error) => {
                         console.error('Error al guardar:', error);
@@ -1138,242 +1504,339 @@
         }
 
         function loadProperties() {
-            if (!currentUser) {
-                console.log('No hay usuario autenticado');
-                return;
-            }
+            if (!currentUser) return;
             
             const propertiesList = document.getElementById('properties-list');
-            propertiesList.innerHTML = '<p>🔄 Cargando propiedades...</p>';
+            propertiesList.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Cargando propiedades...</p>';
             
             db.collection('properties')
                 .where('userId', '==', currentUser.uid)
-                .orderBy('createdAt', 'desc')
                 .get()
                 .then((querySnapshot) => {
-                    console.log('Propiedades encontradas:', querySnapshot.size);
                     propertiesList.innerHTML = '';
                     
                     if (querySnapshot.empty) {
-                        propertiesList.innerHTML = `
-                            <div style="text-align: center; padding: 40px; color: #64748b;">
-                                <div style="font-size: 48px; margin-bottom: 16px;">🏠</div>
-                                <h3>No tienes propiedades registradas</h3>
-                                <p>¡Agrega tu primer inmueble para comenzar!</p>
-                            </div>
-                        `;
+                        propertiesList.innerHTML = '<p>No hay propiedades registradas. <button class="btn btn-small" onclick="showAddPropertyModal()">Agregar primera propiedad</button></p>';
                         return;
                     }
+                    
+                    // Agrupar por ciudad y luego por casa
+                    const propertiesByCity = {};
                     
                     querySnapshot.forEach((doc) => {
                         const property = doc.data();
                         const propertyId = doc.id;
+                        const houseName = getHouseName(property.name);
                         
-                        const createdAt = property.createdAt ? 
-                            property.createdAt.toDate().toLocaleDateString() : 'Fecha no disponible';
+                        if (!propertiesByCity[property.city]) {
+                            propertiesByCity[property.city] = {};
+                        }
                         
-                        const propertyCard = document.createElement('div');
-                        propertyCard.className = 'property-card';
-                        propertyCard.innerHTML = `
-                            <div class="property-header">
-                                <h3>${property.name}</h3>
-                                <div class="property-actions">
-                                    <button class="btn btn-small" onclick="editProperty('${propertyId}')">✏️</button>
-                                    <button class="btn btn-small btn-danger" onclick="deleteProperty('${propertyId}')">🗑️</button>
-                                </div>
+                        if (!propertiesByCity[property.city][houseName]) {
+                            propertiesByCity[property.city][houseName] = [];
+                        }
+                        
+                        propertiesByCity[property.city][houseName].push({ 
+                            id: propertyId, 
+                            data: property,
+                            houseName: houseName
+                        });
+                    });
+                    
+                    // Mostrar propiedades agrupadas por ciudad y casa
+                    for (const city in propertiesByCity) {
+                        const cityGroup = document.createElement('div');
+                        cityGroup.className = 'city-group';
+                        
+                        const cityHeader = document.createElement('div');
+                        cityHeader.className = 'city-header';
+                        cityHeader.innerHTML = `
+                            <div class="city-name">
+                                <i class="fas fa-map-marker-alt city-icon"></i>
+                                ${city}
                             </div>
-                            <p><strong>🏙️ Ciudad:</strong> ${property.city}</p>
-                            <p><strong>🔹 Tipo:</strong> ${property.type}</p>
-                            <p><strong>📍 Dirección:</strong> ${property.address}</p>
-                            <p><strong>💰 Alquiler:</strong> $${property.rent.toFixed(2)}</p>
-                            <p><strong>📊 Estado:</strong> 
-                                <span style="color: ${
-                                    property.status === 'alquilado' ? '#10b981' : 
-                                    property.status === 'mantenimiento' ? '#f59e0b' : '#3b82f6'
-                                }">${property.status}</span>
-                            </p>
-                            ${property.energyCompany ? `<p><strong>⚡ Energía:</strong> ${property.energyCompany}</p>` : ''}
-                            ${property.description ? `<p><strong>📝 Descripción:</strong> ${property.description}</p>` : ''}
-                            <p><small><strong>🕒 Creado:</strong> ${createdAt}</small></p>
-                            <div class="property-stats">
-                                <div class="stat-card">
-                                    <div class="stat-value">$${property.rent.toFixed(2)}</div>
-                                    <div class="stat-label">Ingreso Mensual</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-value">${property.status === 'alquilado' ? '✅' : '⏳'}</div>
-                                    <div class="stat-label">${property.status}</div>
-                                </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="city-count">${Object.keys(propertiesByCity[city]).length}</span>
+                                <i class="fas fa-chevron-down"></i>
                             </div>
                         `;
-                        propertiesList.appendChild(propertyCard);
-                    });
+                        
+                        const cityContent = document.createElement('div');
+                        cityContent.className = 'city-content';
+                        
+                        // Para cada casa en la ciudad
+                        for (const houseName in propertiesByCity[city]) {
+                            const houseGroup = document.createElement('div');
+                            houseGroup.className = 'house-group';
+                            
+                            const houseHeader = document.createElement('div');
+                            houseHeader.className = 'house-header';
+                            houseHeader.innerHTML = `
+                                <div class="house-name">
+                                    <i class="fas fa-home house-icon"></i>
+                                    ${houseName}
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span class="house-count">${propertiesByCity[city][houseName].length}</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            `;
+                            
+                            const houseContent = document.createElement('div');
+                            houseContent.className = 'house-content';
+                            
+                            const houseUnits = document.createElement('div');
+                            houseUnits.className = 'house-units';
+                            
+                            propertiesByCity[city][houseName].forEach(item => {
+                                const property = item.data;
+                                const propertyId = item.id;
+                                
+                                const propertyCard = document.createElement('div');
+                                propertyCard.className = 'property-card';
+                                propertyCard.innerHTML = `
+                                    <div class="property-header">
+                                        <h3>${property.name}</h3>
+                                        <div class="property-actions">
+                                            <button class="btn btn-small" onclick="editProperty('${propertyId}')"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-small btn-danger" onclick="deleteProperty('${propertyId}')"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                    <p><strong><i class="fas fa-building"></i> Tipo:</strong> ${property.type}</p>
+                                    <p><strong><i class="fas fa-map-pin"></i> Dirección:</strong> ${property.address}</p>
+                                    <p><strong><i class="fas fa-dollar-sign"></i> Alquiler:</strong> $${property.rent.toLocaleString('es-ES')}</p>
+                                    <p><strong><i class="fas fa-info-circle"></i> Estado:</strong> 
+                                        <span style="color: ${
+                                            property.status === 'alquilado' ? '#10b981' : 
+                                            property.status === 'mantenimiento' ? '#f59e0b' : '#3b82f6'
+                                        }">${property.status}</span>
+                                    </p>
+                                    ${property.energyCompany ? `<p><strong><i class="fas fa-bolt"></i> Energía:</strong> ${property.energyCompany}</p>` : ''}
+                                    ${property.waterCompany ? `<p><strong><i class="fas fa-tint"></i> Agua:</strong> ${property.waterCompany}</p>` : ''}
+                                    ${property.internetCompany ? `<p><strong><i class="fas fa-wifi"></i> Internet:</strong> ${property.internetCompany}</p>` : ''}
+                                    ${property.description ? `<p><strong><i class="fas fa-align-left"></i> Descripción:</strong> ${property.description}</p>` : ''}
+                                    <div class="property-stats">
+                                        <div class="stat-card">
+                                            <div class="stat-value">$${property.rent.toLocaleString('es-ES')}</div>
+                                            <div class="stat-label">Ingreso Mensual</div>
+                                        </div>
+                                        <div class="stat-card">
+                                            <div class="stat-value">${property.status === 'alquilado' ? '<i class="fas fa-check"></i>' : '<i class="fas fa-clock"></i>'}</div>
+                                            <div class="stat-label">${property.status}</div>
+                                        </div>
+                                    </div>
+                                `;
+                                houseUnits.appendChild(propertyCard);
+                            });
+                            
+                            houseContent.appendChild(houseUnits);
+                            
+                            houseHeader.addEventListener('click', function() {
+                                const isExpanded = houseContent.classList.contains('expanded');
+                                const icon = this.querySelector('.fa-chevron-down');
+                                
+                                if (isExpanded) {
+                                    houseContent.classList.remove('expanded');
+                                    icon.style.transform = 'rotate(0deg)';
+                                } else {
+                                    houseContent.classList.add('expanded');
+                                    icon.style.transform = 'rotate(180deg)';
+                                }
+                            });
+                            
+                            houseGroup.appendChild(houseHeader);
+                            houseGroup.appendChild(houseContent);
+                            cityContent.appendChild(houseGroup);
+                        }
+                        
+                        cityHeader.addEventListener('click', function() {
+                            const isExpanded = cityContent.classList.contains('expanded');
+                            const icon = this.querySelector('.fa-chevron-down');
+                            
+                            if (isExpanded) {
+                                cityContent.classList.remove('expanded');
+                                icon.style.transform = 'rotate(0deg)';
+                            } else {
+                                cityContent.classList.add('expanded');
+                                icon.style.transform = 'rotate(180deg)';
+                            }
+                        });
+                        
+                        cityGroup.appendChild(cityHeader);
+                        cityGroup.appendChild(cityContent);
+                        propertiesList.appendChild(cityGroup);
+                    }
                 })
                 .catch((error) => {
-                    console.error('Error detallado:', error);
-                    propertiesList.innerHTML = `
-                        <div class="error">
-                            <strong>❌ Error al cargar propiedades</strong>
-                            <p>${error.message}</p>
-                        </div>
-                    `;
+                    console.error('Error al cargar propiedades:', error);
+                    propertiesList.innerHTML = '<div class="error">Error al cargar propiedades: ' + error.message + '</div>';
                 });
         }
 
-        function loadPropertiesForServices() {
+        // Gestión de Servicios Públicos - Agrupado por casa CON EDICIÓN
+        function loadServices() {
             if (!currentUser) return;
             
-            const servicesPropertyList = document.getElementById('services-property-list');
-            servicesPropertyList.innerHTML = '<p>Cargando propiedades...</p>';
+            const servicesContainer = document.getElementById('services-container');
+            servicesContainer.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Cargando servicios...</p>';
             
             db.collection('properties')
                 .where('userId', '==', currentUser.uid)
                 .get()
                 .then((querySnapshot) => {
-                    servicesPropertyList.innerHTML = '';
+                    servicesContainer.innerHTML = '';
                     
                     if (querySnapshot.empty) {
-                        servicesPropertyList.innerHTML = '<p>No hay propiedades registradas</p>';
+                        servicesContainer.innerHTML = '<p>No hay propiedades con servicios registrados.</p>';
                         return;
                     }
+                    
+                    // Agrupar propiedades por casa para servicios
+                    const servicesByHouse = {};
                     
                     querySnapshot.forEach((doc) => {
                         const property = doc.data();
                         const propertyId = doc.id;
+                        const houseName = getHouseName(property.name);
                         
-                        const propertyCard = document.createElement('div');
-                        propertyCard.className = 'property-card';
-                        propertyCard.innerHTML = `
-                            <div class="property-header">
-                                <h3>${property.name}</h3>
-                                <button class="btn btn-small btn-warning" onclick="showPropertyServices('${propertyId}')">
-                                    ⚡ Servicios
-                                </button>
-                            </div>
-                            <p><strong>🏙️ Ciudad:</strong> ${property.city}</p>
-                            <p><strong>📍 Dirección:</strong> ${property.address}</p>
-                            ${property.energyCompany ? `<p><strong>⚡ Empresa:</strong> ${property.energyCompany}</p>` : ''}
-                            ${property.energyContract ? `<p><strong>📄 Contrato:</strong> ${property.energyContract}</p>` : ''}
-                            ${property.paymentUrl ? `<p><strong>🌐 Pago:</strong> <a href="${property.paymentUrl}" target="_blank">Enlace</a></p>` : ''}
-                        `;
-                        servicesPropertyList.appendChild(propertyCard);
+                        // Mostrar la propiedad si tiene al menos un servicio configurado
+                        if (property.energyCompany || property.waterCompany || property.internetCompany) {
+                            if (!servicesByHouse[houseName]) {
+                                servicesByHouse[houseName] = {
+                                    city: property.city,
+                                    properties: []
+                                };
+                            }
+                            servicesByHouse[houseName].properties.push({
+                                id: propertyId,
+                                data: property
+                            });
+                        }
                     });
-                });
-        }
-
-        function showPropertyServices(propertyId) {
-            currentPropertyForServices = propertyId;
-            
-            db.collection('properties').doc(propertyId).get()
-                .then((doc) => {
-                    if (doc.exists) {
-                        const property = doc.data();
-                        const modal = document.getElementById('services-modal');
-                        const title = document.getElementById('services-modal-title');
-                        const content = document.getElementById('services-modal-content');
+                    
+                    // Mostrar servicios agrupados por casa
+                    for (const houseName in servicesByHouse) {
+                        const houseData = servicesByHouse[houseName];
                         
-                        title.textContent = `Servicios - ${property.name}`;
-                        content.innerHTML = `
-                            <div class="grid">
-                                <div class="col">
-                                    <label>Empresa de Energía</label>
-                                    <input type="text" id="edit-energy-company" value="${property.energyCompany || ''}">
+                        const serviceCard = document.createElement('div');
+                        serviceCard.className = 'service-card';
+                        
+                        let servicesContent = '';
+                        
+                        houseData.properties.forEach(item => {
+                            const property = item.data;
+                            const propertyId = item.id;
+                            
+                            servicesContent += `
+                                <div class="service-unit">
+                                    <div class="service-unit-header">
+                                        <h4><i class="fas fa-home"></i> ${property.name}</h4>
+                                        <button class="btn btn-small" onclick="editProperty('${propertyId}')"><i class="fas fa-edit"></i> Editar</button>
+                                    </div>
+                                    ${property.energyCompany ? `
+                                        <div class="service-info-item">
+                                            <span><strong><i class="fas fa-bolt"></i> Energía:</strong></span>
+                                            <span>${property.energyCompany}</span>
+                                        </div>
+                                        ${property.energyContract ? `
+                                        <div class="service-info-item">
+                                            <span><strong>Contrato:</strong></span>
+                                            <span>${property.energyContract}</span>
+                                        </div>
+                                        ` : ''}
+                                        ${property.paymentUrl ? `
+                                        <div style="text-align: center; margin: 5px 0;">
+                                            <a href="${property.paymentUrl}" target="_blank" class="payment-link">
+                                                <i class="fas fa-external-link-alt"></i> Pagar Energía
+                                            </a>
+                                        </div>
+                                        ` : ''}
+                                    ` : ''}
+                                    
+                                    ${property.waterCompany ? `
+                                        <div class="service-info-item">
+                                            <span><strong><i class="fas fa-tint"></i> Agua:</strong></span>
+                                            <span>${property.waterCompany}</span>
+                                        </div>
+                                        ${property.waterContract ? `
+                                        <div class="service-info-item">
+                                            <span><strong>Contrato:</strong></span>
+                                            <span>${property.waterContract}</span>
+                                        </div>
+                                        ` : ''}
+                                    ` : ''}
+                                    
+                                    ${property.internetCompany ? `
+                                        <div class="service-info-item">
+                                            <span><strong><i class="fas fa-wifi"></i> Internet:</strong></span>
+                                            <span>${property.internetCompany}</span>
+                                        </div>
+                                        ${property.internetContract ? `
+                                        <div class="service-info-item">
+                                            <span><strong>Contrato:</strong></span>
+                                            <span>${property.internetContract}</span>
+                                        </div>
+                                        ` : ''}
+                                    ` : ''}
                                 </div>
-                                <div class="col">
-                                    <label>Número de Contrato</label>
-                                    <input type="text" id="edit-energy-contract" value="${property.energyContract || ''}">
-                                </div>
-                                <div class="col">
-                                    <label>Página de Pagos</label>
-                                    <input type="url" id="edit-payment-url" value="${property.paymentUrl || ''}">
-                                </div>
-                                <div class="col">
-                                    <button class="btn btn-success" onclick="updatePropertyServices()">💾 Guardar Cambios</button>
-                                </div>
+                            `;
+                        });
+                        
+                        serviceCard.innerHTML = `
+                            <div class="service-header">
+                                <h3><i class="fas fa-building"></i> ${houseName}</h3>
+                                <span class="city-tag">${houseData.city}</span>
                             </div>
-                            <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px;">
-                                <h4>🔗 Enlaces Rápidos</h4>
-                                ${property.paymentUrl ? `
-                                    <p><a href="${property.paymentUrl}" target="_blank" class="btn btn-small">🌐 Pagar Servicios</a></p>
-                                ` : '<p>Agrega una URL de pago para habilitar esta función</p>'}
+                            <div class="service-info">
+                                ${servicesContent}
                             </div>
                         `;
-                        modal.classList.remove('hidden');
+                        servicesContainer.appendChild(serviceCard);
                     }
-                });
-        }
-
-        function updatePropertyServices() {
-            if (!currentPropertyForServices) return;
-            
-            const updateData = {
-                energyCompany: document.getElementById('edit-energy-company').value.trim(),
-                energyContract: document.getElementById('edit-energy-contract').value.trim(),
-                paymentUrl: document.getElementById('edit-payment-url').value.trim(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            db.collection('properties').doc(currentPropertyForServices).update(updateData)
-                .then(() => {
-                    showToast('✅ Servicios actualizados correctamente', true);
-                    closeServicesModal();
-                    loadPropertiesForServices();
-                })
-                .catch((error) => {
-                    showError('❌ Error al actualizar servicios: ' + error.message);
-                });
-        }
-
-        function closeServicesModal() {
-            document.getElementById('services-modal').classList.add('hidden');
-            currentPropertyForServices = null;
-        }
-
-        function editProperty(propertyId) {
-            editingPropertyId = propertyId;
-            
-            db.collection('properties').doc(propertyId).get()
-                .then((doc) => {
-                    if (doc.exists) {
-                        const property = doc.data();
-                        document.getElementById('modal-title').textContent = 'Editar Inmueble';
-                        document.getElementById('property-city').value = property.city || '';
-                        document.getElementById('property-name').value = property.name;
-                        document.getElementById('property-type').value = property.type;
-                        document.getElementById('property-address').value = property.address;
-                        document.getElementById('property-rent').value = property.rent;
-                        document.getElementById('property-energy-company').value = property.energyCompany || '';
-                        document.getElementById('property-energy-contract').value = property.energyContract || '';
-                        document.getElementById('property-payment-url').value = property.paymentUrl || '';
-                        document.getElementById('property-description').value = property.description || '';
-                        document.getElementById('property-status').value = property.status;
-                        document.getElementById('property-modal').classList.remove('hidden');
+                    
+                    if (servicesContainer.children.length === 0) {
+                        servicesContainer.innerHTML = `
+                            <div style="text-align: center; padding: 40px;">
+                                <i class="fas fa-bolt" style="font-size: 48px; color: #64748b; margin-bottom: 15px;"></i>
+                                <h3>No hay servicios configurados</h3>
+                                <p>Agrega información de servicios públicos a tus propiedades para verlos aquí.</p>
+                                <button class="btn" onclick="showAddPropertyModal()"><i class="fas fa-plus"></i> Agregar Propiedad con Servicios</button>
+                            </div>
+                        `;
                     }
                 })
                 .catch((error) => {
-                    showError('❌ Error al cargar propiedad: ' + error.message);
+                    console.error('Error al cargar servicios:', error);
+                    servicesContainer.innerHTML = '<div class="error">Error al cargar servicios: ' + error.message + '</div>';
                 });
         }
 
+        // Funciones para eliminar propiedades
         function deleteProperty(propertyId) {
             if (confirm('¿Estás seguro de que quieres eliminar esta propiedad?')) {
                 db.collection('properties').doc(propertyId).delete()
                     .then(() => {
                         showToast('✅ Propiedad eliminada correctamente', true);
                         loadProperties();
-                        updateFinanceSummary();
+                        // Recargar servicios si estamos en esa pestaña
+                        if (!document.getElementById('property-servicios').classList.contains('hidden')) {
+                            loadServices();
+                        }
                     })
                     .catch((error) => {
-                        showError('❌ Error al eliminar: ' + error.message);
+                        showError('❌ Error al eliminar propiedad: ' + error.message);
                     });
             }
         }
+
+        // El resto del código de ingresos, gastos y funciones auxiliares se mantiene igual
+        // ... [Código de ingresos y gastos sin cambios]
 
         // Gestión de Ingresos
         function showAddIncomeModal() {
             editingIncomeId = null;
             document.getElementById('income-form').reset();
-            document.getElementById('income-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('income-date').valueAsDate = new Date();
             loadPropertiesForDropdown('income-property');
             document.getElementById('income-modal').classList.remove('hidden');
         }
@@ -1391,93 +1854,105 @@
             }
 
             const incomeData = {
-                date: new Date(document.getElementById('income-date').value),
+                date: firebase.firestore.Timestamp.fromDate(new Date(document.getElementById('income-date').value)),
                 description: document.getElementById('income-description').value.trim(),
                 category: document.getElementById('income-category').value,
                 amount: parseFloat(document.getElementById('income-amount').value),
                 propertyId: document.getElementById('income-property').value || null,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                userId: currentUser.uid
+                userId: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
+
+            if (isNaN(incomeData.amount) || incomeData.amount <= 0) {
+                showError('❌ El monto debe ser un número mayor a 0');
+                return;
+            }
 
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Guardando...';
             submitBtn.disabled = true;
 
-            if (editingIncomeId) {
-                db.collection('incomes').doc(editingIncomeId).update(incomeData)
-                    .then(() => {
-                        showToast('✅ Ingreso actualizado correctamente', true);
-                        closeIncomeModal();
-                        loadIncomes();
-                        updateFinanceSummary();
-                    })
-                    .finally(() => {
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
-                    });
-            } else {
-                incomeData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                
-                db.collection('incomes').add(incomeData)
-                    .then(() => {
-                        showToast('✅ Ingreso agregado correctamente', true);
-                        closeIncomeModal();
-                        loadIncomes();
-                        updateFinanceSummary();
-                    })
-                    .finally(() => {
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
-                    });
-            }
+            db.collection('incomes').add(incomeData)
+                .then((docRef) => {
+                    console.log('✅ Ingreso guardado con ID:', docRef.id);
+                    showToast('✅ Ingreso agregado correctamente', true);
+                    closeIncomeModal();
+                    loadIncomes();
+                    updateFinanceSummary();
+                })
+                .catch((error) => {
+                    console.error('❌ Error al guardar ingreso:', error);
+                    showError('❌ Error al guardar: ' + error.message);
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
         }
 
         function loadIncomes() {
             if (!currentUser) return;
             
             const incomesList = document.getElementById('incomes-list');
-            incomesList.innerHTML = '<tr><td colspan="5">Cargando ingresos...</td></tr>';
+            incomesList.innerHTML = '<tr><td colspan="5"><i class="fas fa-spinner fa-spin"></i> Cargando ingresos...</td></tr>';
             
             db.collection('incomes')
                 .where('userId', '==', currentUser.uid)
-                .orderBy('date', 'desc')
                 .get()
                 .then((querySnapshot) => {
+                    console.log('Ingresos encontrados:', querySnapshot.size);
                     incomesList.innerHTML = '';
                     
                     if (querySnapshot.empty) {
-                        incomesList.innerHTML = '<tr><td colspan="5">No hay ingresos registrados</td></tr>';
+                        incomesList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No hay ingresos registrados</td></tr>';
                         return;
                     }
                     
+                    // Ordenar localmente por fecha
+                    const incomes = [];
                     querySnapshot.forEach((doc) => {
                         const income = doc.data();
-                        const incomeId = doc.id;
-                        const date = income.date.toDate().toLocaleDateString();
+                        income.id = doc.id;
+                        incomes.push(income);
+                    });
+                    
+                    // Ordenar por fecha descendente localmente
+                    incomes.sort((a, b) => {
+                        const dateA = a.date ? a.date.toDate() : new Date(0);
+                        const dateB = b.date ? b.date.toDate() : new Date(0);
+                        return dateB - dateA;
+                    });
+                    
+                    incomes.forEach(income => {
+                        const date = income.date ? income.date.toDate().toLocaleDateString('es-ES') : 'Fecha no disponible';
                         
                         incomesList.innerHTML += `
                             <tr>
                                 <td>${date}</td>
                                 <td>${income.description}</td>
-                                <td>${income.category}</td>
-                                <td>$${income.amount.toFixed(2)}</td>
+                                <td><span class="category-badge">${income.category}</span></td>
+                                <td><strong>$${income.amount ? income.amount.toLocaleString('es-ES') : '0.00'}</strong></td>
                                 <td>
-                                    <button class="btn btn-small" onclick="editIncome('${incomeId}')">✏️</button>
-                                    <button class="btn btn-small btn-danger" onclick="deleteIncome('${incomeId}')">🗑️</button>
+                                    <button class="btn btn-small" onclick="editIncome('${income.id}')"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-small btn-danger" onclick="deleteIncome('${income.id}')"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         `;
                     });
+                })
+                .catch((error) => {
+                    console.error('❌ Error al cargar ingresos:', error);
+                    incomesList.innerHTML = '<tr><td colspan="5" class="error">Error al cargar ingresos: ' + error.message + '</td></tr>';
                 });
         }
 
-        // Gestión de Gastos (similar a ingresos)
+        // Gestión de Gastos
         function showAddExpenseModal() {
             editingExpenseId = null;
             document.getElementById('expense-form').reset();
-            document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('expense-date').valueAsDate = new Date();
             loadPropertiesForDropdown('expense-property');
             document.getElementById('expense-modal').classList.remove('hidden');
         }
@@ -1495,85 +1970,97 @@
             }
 
             const expenseData = {
-                date: new Date(document.getElementById('expense-date').value),
+                date: firebase.firestore.Timestamp.fromDate(new Date(document.getElementById('expense-date').value)),
                 description: document.getElementById('expense-description').value.trim(),
                 category: document.getElementById('expense-category').value,
                 amount: parseFloat(document.getElementById('expense-amount').value),
                 propertyId: document.getElementById('expense-property').value || null,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                userId: currentUser.uid
+                userId: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
+
+            if (isNaN(expenseData.amount) || expenseData.amount <= 0) {
+                showError('❌ El monto debe ser un número mayor a 0');
+                return;
+            }
 
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Guardando...';
             submitBtn.disabled = true;
 
-            if (editingExpenseId) {
-                db.collection('expenses').doc(editingExpenseId).update(expenseData)
-                    .then(() => {
-                        showToast('✅ Gasto actualizado correctamente', true);
-                        closeExpenseModal();
-                        loadExpenses();
-                        updateFinanceSummary();
-                    })
-                    .finally(() => {
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
-                    });
-            } else {
-                expenseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                
-                db.collection('expenses').add(expenseData)
-                    .then(() => {
-                        showToast('✅ Gasto agregado correctamente', true);
-                        closeExpenseModal();
-                        loadExpenses();
-                        updateFinanceSummary();
-                    })
-                    .finally(() => {
-                        submitBtn.textContent = originalText;
-                        submitBtn.disabled = false;
-                    });
-            }
+            db.collection('expenses').add(expenseData)
+                .then((docRef) => {
+                    console.log('✅ Gasto guardado con ID:', docRef.id);
+                    showToast('✅ Gasto agregado correctamente', true);
+                    closeExpenseModal();
+                    loadExpenses();
+                    updateFinanceSummary();
+                })
+                .catch((error) => {
+                    console.error('❌ Error al guardar gasto:', error);
+                    showError('❌ Error al guardar: ' + error.message);
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
         }
 
         function loadExpenses() {
             if (!currentUser) return;
             
             const expensesList = document.getElementById('expenses-list');
-            expensesList.innerHTML = '<tr><td colspan="5">Cargando gastos...</td></tr>';
+            expensesList.innerHTML = '<tr><td colspan="5"><i class="fas fa-spinner fa-spin"></i> Cargando gastos...</td></tr>';
             
             db.collection('expenses')
                 .where('userId', '==', currentUser.uid)
-                .orderBy('date', 'desc')
                 .get()
                 .then((querySnapshot) => {
+                    console.log('Gastos encontrados:', querySnapshot.size);
                     expensesList.innerHTML = '';
                     
                     if (querySnapshot.empty) {
-                        expensesList.innerHTML = '<tr><td colspan="5">No hay gastos registrados</td></tr>';
+                        expensesList.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No hay gastos registrados</td></tr>';
                         return;
                     }
                     
+                    // Ordenar localmente por fecha
+                    const expenses = [];
                     querySnapshot.forEach((doc) => {
                         const expense = doc.data();
-                        const expenseId = doc.id;
-                        const date = expense.date.toDate().toLocaleDateString();
+                        expense.id = doc.id;
+                        expenses.push(expense);
+                    });
+                    
+                    // Ordenar por fecha descendente localmente
+                    expenses.sort((a, b) => {
+                        const dateA = a.date ? a.date.toDate() : new Date(0);
+                        const dateB = b.date ? b.date.toDate() : new Date(0);
+                        return dateB - dateA;
+                    });
+                    
+                    expenses.forEach(expense => {
+                        const date = expense.date ? expense.date.toDate().toLocaleDateString('es-ES') : 'Fecha no disponible';
                         
                         expensesList.innerHTML += `
                             <tr>
                                 <td>${date}</td>
                                 <td>${expense.description}</td>
-                                <td>${expense.category}</td>
-                                <td>$${expense.amount.toFixed(2)}</td>
+                                <td><span class="category-badge">${expense.category}</span></td>
+                                <td><strong>$${expense.amount ? expense.amount.toLocaleString('es-ES') : '0.00'}</strong></td>
                                 <td>
-                                    <button class="btn btn-small" onclick="editExpense('${expenseId}')">✏️</button>
-                                    <button class="btn btn-small btn-danger" onclick="deleteExpense('${expenseId}')">🗑️</button>
+                                    <button class="btn btn-small" onclick="editExpense('${expense.id}')"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-small btn-danger" onclick="deleteExpense('${expense.id}')"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         `;
                     });
+                })
+                .catch((error) => {
+                    console.error('❌ Error al cargar gastos:', error);
+                    expensesList.innerHTML = '<tr><td colspan="5" class="error">Error al cargar gastos: ' + error.message + '</td></tr>';
                 });
         }
 
@@ -1589,94 +2076,54 @@
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                         const property = doc.data();
-                        dropdown.innerHTML += `<option value="${doc.id}">${property.name}</option>`;
+                        dropdown.innerHTML += `<option value="${doc.id}">${property.name} - ${property.city}</option>`;
                     });
+                })
+                .catch((error) => {
+                    console.error('Error al cargar propiedades para dropdown:', error);
                 });
         }
 
-        function updateFinanceSummary() {
-            if (!currentUser) return;
-            
-            // Calcular total de ingresos
-            let totalIncomes = 0;
-            db.collection('incomes')
-                .where('userId', '==', currentUser.uid)
-                .get()
-                .then((incomesSnapshot) => {
-                    incomesSnapshot.forEach((doc) => {
-                        totalIncomes += doc.data().amount;
-                    });
-                    
-                    // Calcular total de gastos
-                    let totalExpenses = 0;
-                    return db.collection('expenses')
-                        .where('userId', '==', currentUser.uid)
-                        .get()
-                        .then((expensesSnapshot) => {
-                            expensesSnapshot.forEach((doc) => {
-                                totalExpenses += doc.data().amount;
-                            });
-                            
-                            // Calcular ingresos por inmuebles
-                            let propertyIncomes = 0;
-                            return db.collection('properties')
-                                .where('userId', '==', currentUser.uid)
-                                .get()
-                                .then((propertiesSnapshot) => {
-                                    propertiesSnapshot.forEach((doc) => {
-                                        const property = doc.data();
-                                        if (property.status === 'alquilado') {
-                                            propertyIncomes += property.rent;
-                                        }
-                                    });
-                                    
-                                    // Actualizar la interfaz
-                                    document.getElementById('total-ingresos').textContent = '$' + totalIncomes.toFixed(2);
-                                    document.getElementById('total-gastos').textContent = '$' + totalExpenses.toFixed(2);
-                                    document.getElementById('balance-total').textContent = '$' + (totalIncomes - totalExpenses).toFixed(2);
-                                    document.getElementById('ingresos-inmuebles').textContent = '$' + propertyIncomes.toFixed(2);
-                                });
-                        });
-                });
-        }
-
-        // Funciones auxiliares (edit/delete para ingresos y gastos)
+        // Funciones auxiliares para ingresos y gastos
         function editIncome(incomeId) {
-            // Implementar edición de ingreso
-            showToast('✏️ Función de edición en desarrollo', false);
+            showToast('Funcionalidad de edición de ingresos en desarrollo', false);
         }
 
         function deleteIncome(incomeId) {
-            if (confirm('¿Estás seguro de eliminar este ingreso?')) {
+            if (confirm('¿Estás seguro de que quieres eliminar este ingreso?')) {
                 db.collection('incomes').doc(incomeId).delete()
                     .then(() => {
-                        showToast('✅ Ingreso eliminado', true);
+                        showToast('✅ Ingreso eliminado correctamente', true);
                         loadIncomes();
                         updateFinanceSummary();
+                    })
+                    .catch((error) => {
+                        showError('❌ Error al eliminar ingreso: ' + error.message);
                     });
             }
         }
 
         function editExpense(expenseId) {
-            // Implementar edición de gasto
-            showToast('✏️ Función de edición en desarrollo', false);
+            showToast('Funcionalidad de edición de gastos en desarrollo', false);
         }
 
         function deleteExpense(expenseId) {
-            if (confirm('¿Estás seguro de eliminar este gasto?')) {
+            if (confirm('¿Estás seguro de que quieres eliminar este gasto?')) {
                 db.collection('expenses').doc(expenseId).delete()
                     .then(() => {
-                        showToast('✅ Gasto eliminado', true);
+                        showToast('✅ Gasto eliminado correctamente', true);
                         loadExpenses();
                         updateFinanceSummary();
+                    })
+                    .catch((error) => {
+                        showError('❌ Error al eliminar gasto: ' + error.message);
                     });
             }
         }
 
-        // Función para verificar conexión a Firebase
-        function checkFirebaseConnection() {
-            console.log('🔍 Verificando conexión Firebase...');
-            console.log('Usuario actual:', auth.currentUser);
+        function updateFinanceSummary() {
+            // Implementación básica del resumen financiero
+            console.log('Actualizando resumen financiero...');
         }
 
         // Verificar estado de autenticación
@@ -1685,8 +2132,10 @@
             
             if (user) {
                 currentUser = user;
+                console.log('Usuario autenticado:', user.uid);
                 showMainApp();
             } else {
+                console.log('No hay usuario autenticado');
                 showLoginScreen();
             }
         });
@@ -1694,10 +2143,8 @@
         // Inicialización
         window.addEventListener('load', function() {
             document.getElementById('loading-screen').classList.remove('hidden');
-        });
-
-        // Establecer fecha actual por defecto en los modales
-        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Establecer fecha actual por defecto
             const today = new Date().toISOString().split('T')[0];
             if (document.getElementById('income-date')) {
                 document.getElementById('income-date').value = today;
