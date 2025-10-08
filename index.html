@@ -271,7 +271,7 @@
         }
 
         showToast('🎉 ¡Cuenta creada exitosamente!', true);
-        showMainApp(user);
+        // No llamar a showMainApp aquí - onAuthStateChanged se encargará
 
       } catch (error) {
         console.error('❌ Error en registro:', error);
@@ -313,7 +313,7 @@
         }
 
         showToast('👋 ¡Bienvenido de nuevo!', true);
-        showMainApp(user);
+        // No llamar a showMainApp aquí - onAuthStateChanged se encargará
 
       } catch (error) {
         console.error('❌ Error en login:', error);
@@ -430,12 +430,16 @@
       // Verificar si ya hay un usuario autenticado
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log('👤 Usuario ya autenticado:', user.email);
+          console.log('👤 Usuario autenticado:', user.email);
           showMainApp(user);
         } else {
           console.log('🔐 No hay usuario autenticado');
           $('#login-screen').classList.remove('hidden');
           $('#app-main').classList.add('hidden');
+          
+          // Limpiar formularios
+          $('#register-form').reset();
+          $('#login-form').reset();
         }
       });
 
