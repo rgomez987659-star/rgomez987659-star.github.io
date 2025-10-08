@@ -170,23 +170,8 @@
 
   <div class="toast" id="toast"></div>
 
-  <script type="module">
+  <script>
     // ===== CONFIGURACIÓN FIREBASE =====
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged,
-      updateProfile 
-    } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      setDoc 
-    } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-
     const firebaseConfig = {
       apiKey: "AIzaSyA9vOVrtGrdVYU9FgUCtpZWOTwpmO5t2n4",
       authDomain: "propiedades-7f7fe.firebaseapp.com",
@@ -196,11 +181,6 @@
       appId: "1:429219311761:web:4d45c7c5e53cc7c5394f30"
     };
 
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
     // ===== FUNCIONES DE UTILIDAD =====
     const $ = (id) => document.getElementById(id);
     const showToast = (message, isSuccess = false) => {
@@ -209,6 +189,10 @@
       toast.className = `toast show ${isSuccess ? 'success' : ''}`;
       setTimeout(() => toast.classList.remove('show'), 4000);
     };
+
+    // ===== SIMULACIÓN DE BASE DE DATOS LOCAL =====
+    let users = JSON.parse(localStorage.getItem('justpersonal_users')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('justpersonal_current_user')) || null;
 
     // ===== MANEJO DE AUTENTICACIÓN =====
     function showLoginForm() {
@@ -226,7 +210,7 @@
     }
 
     // ===== REGISTRO DE NUEVO USUARIO =====
-    async function handleRegistration(e) {
+    function handleRegistration(e) {
       e.preventDefault();
       
       const email = $('#user-email').value.trim();
@@ -243,46 +227,46 @@
         return;
       }
 
+      // Verificar si el usuario ya existe
+      const existingUser = users.find(user => user.email === email);
+      if (existingUser) {
+        showToast('❌ Este email ya está registrado');
+        return;
+      }
+
       setLoadingState('register', true);
 
       try {
-        console.log('🔐 Intentando crear usuario...');
+        // Crear nuevo usuario
+        const newUser = {
+          id: Date.now().toString(),
+          email: email,
+          name: name,
+          password: password, // En una app real esto estaría encriptado
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        localStorage.setItem('justpersonal_users', JSON.stringify(users));
         
-        // 1. Crear usuario en Authentication
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log('✅ Usuario creado:', user.uid);
-
-        // 2. Actualizar perfil con nombre
-        await updateProfile(user, {
-          displayName: name
-        });
-
-        // 3. Guardar información adicional en Firestore
-        try {
-          await setDoc(doc(db, "users", user.uid), {
-            email: email,
-            name: name,
-            createdAt: new Date().toISOString(),
-            lastLogin: new Date().toISOString()
-          });
-        } catch (firestoreError) {
-          console.warn('⚠️ Error guardando en Firestore:', firestoreError);
-        }
+        // Iniciar sesión automáticamente
+        currentUser = newUser;
+        localStorage.setItem('justpersonal_current_user', JSON.stringify(currentUser));
 
         showToast('🎉 ¡Cuenta creada exitosamente!', true);
-        // No llamar a showMainApp aquí - onAuthStateChanged se encargará
+        showMainApp(newUser);
 
       } catch (error) {
         console.error('❌ Error en registro:', error);
-        handleAuthError(error);
+        showToast('❌ Error al crear la cuenta');
       } finally {
         setLoadingState('register', false);
       }
     }
 
     // ===== LOGIN DE USUARIO EXISTENTE =====
-    async function handleLogin(e) {
+    function handleLogin(e) {
       e.preventDefault();
       
       const email = $('#login-email').value.trim();
@@ -296,46 +280,31 @@
       setLoadingState('login', true);
 
       try {
-        console.log('🔐 Intentando iniciar sesión...');
+        // Buscar usuario
+        const user = users.find(u => u.email === email && u.password === password);
         
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        
-        console.log('✅ Sesión iniciada:', user.uid);
-        
-        // Actualizar último login en Firestore
-        try {
-          await setDoc(doc(db, "users", user.uid), {
-            lastLogin: new Date().toISOString()
-          }, { merge: true });
-        } catch (firestoreError) {
-          console.warn('⚠️ Error actualizando último login:', firestoreError);
+        if (!user) {
+          showToast('❌ Email o contraseña incorrectos');
+          return;
         }
 
+        // Actualizar último login
+        user.lastLogin = new Date().toISOString();
+        localStorage.setItem('justpersonal_users', JSON.stringify(users));
+        
+        // Iniciar sesión
+        currentUser = user;
+        localStorage.setItem('justpersonal_current_user', JSON.stringify(currentUser));
+
         showToast('👋 ¡Bienvenido de nuevo!', true);
-        // No llamar a showMainApp aquí - onAuthStateChanged se encargará
+        showMainApp(user);
 
       } catch (error) {
         console.error('❌ Error en login:', error);
-        handleAuthError(error);
+        showToast('❌ Error al iniciar sesión');
       } finally {
         setLoadingState('login', false);
       }
-    }
-
-    function handleAuthError(error) {
-      const errorMessages = {
-        'auth/email-already-in-use': '❌ Este email ya está registrado',
-        'auth/invalid-email': '❌ El formato del email no es válido',
-        'auth/weak-password': '❌ La contraseña es demasiado débil',
-        'auth/user-not-found': '❌ No existe una cuenta con este email',
-        'auth/wrong-password': '❌ Contraseña incorrecta',
-        'auth/too-many-requests': '❌ Demasiados intentos. Intenta más tarde',
-        'auth/network-request-failed': '❌ Error de conexión a internet'
-      };
-
-      const message = errorMessages[error.code] || `❌ Error: ${error.message}`;
-      showToast(message);
     }
 
     function setLoadingState(formType, loading) {
@@ -355,26 +324,34 @@
 
     // ===== APLICACIÓN PRINCIPAL =====
     function showMainApp(user) {
-      console.log('🚀 Mostrando aplicación principal');
+      console.log('🚀 Mostrando aplicación principal para:', user.email);
       $('#login-screen').classList.add('hidden');
       $('#app-main').classList.remove('hidden');
       
       // Actualizar información del usuario
-      $('#user-display').textContent = user.displayName || user.email;
+      $('#user-display').textContent = user.name || user.email;
       
       // Configurar eventos de la aplicación
       setupAppEvents();
     }
 
+    function hideMainApp() {
+      $('#app-main').classList.add('hidden');
+      $('#login-screen').classList.remove('hidden');
+      
+      // Limpiar formularios
+      $('#register-form').reset();
+      $('#login-form').reset();
+      showRegisterForm(); // Volver al formulario de registro por defecto
+    }
+
     function setupAppEvents() {
       // Logout
-      $('#btn-logout').addEventListener('click', async () => {
-        try {
-          await signOut(auth);
-          showToast('👋 Sesión cerrada correctamente');
-        } catch (error) {
-          showToast('❌ Error al cerrar sesión');
-        }
+      $('#btn-logout').addEventListener('click', () => {
+        currentUser = null;
+        localStorage.removeItem('justpersonal_current_user');
+        showToast('👋 Sesión cerrada correctamente');
+        hideMainApp();
       });
 
       // Toggle tema
@@ -428,22 +405,16 @@
       });
 
       // Verificar si ya hay un usuario autenticado
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          console.log('👤 Usuario autenticado:', user.email);
-          showMainApp(user);
-        } else {
-          console.log('🔐 No hay usuario autenticado');
-          $('#login-screen').classList.remove('hidden');
-          $('#app-main').classList.add('hidden');
-          
-          // Limpiar formularios
-          $('#register-form').reset();
-          $('#login-form').reset();
-        }
-      });
+      if (currentUser) {
+        console.log('👤 Usuario ya autenticado:', currentUser.email);
+        showMainApp(currentUser);
+      } else {
+        console.log('🔐 No hay usuario autenticado');
+        hideMainApp();
+      }
 
       console.log('✅ Aplicación inicializada correctamente');
+      console.log('Usuarios registrados:', users);
     });
 
   </script>
