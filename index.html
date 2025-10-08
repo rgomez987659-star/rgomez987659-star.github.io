@@ -22,7 +22,7 @@
     .card:hover{transform: translateY(-4px);}
     .card header{padding:20px 20px 0}
     .card .content{padding:20px}
-    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;}
     .btn{appearance:none;border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-weight:600;background:var(--panel);transition:.15s}
     .btn:hover{background:var(--bg); border-color: var(--accent);}
     .btn.primary{border-color:var(--accent);color:var(--accent); background: transparent;}
@@ -30,7 +30,9 @@
     .btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
     .btn.ghost:hover{color:var(--text); background: var(--bg);}
     .grid{display:grid;gap:16px}
-    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.two{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));}
+    .grid.three{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+    .col{display: flex; flex-direction: column; gap: 4px;}
     label{font-size:13px;color:var(--muted); font-weight: 500;}
     input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
     input:focus, select:focus, textarea:focus {outline: 2px solid var(--accent); border-color: transparent;}
@@ -71,8 +73,6 @@
     .modal .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);width:min(600px,95vw);max-height:80vh;display:flex;flex-direction:column;}
     .modal .box header{padding:12px 16px;border-bottom:1px solid var(--line);font-weight:600;display:flex;justify-content:space-between;align-items:center;}
     .modal .box .content{padding:16px;overflow:auto;line-height:1.6;}
-    .modal .box .content h3 {margin: 16px 0 8px 0;}
-    .modal .box .content pre {white-space:pre-wrap; font-family:inherit; background: var(--bg); padding: 12px; border-radius: 8px;}
 </style>
 </head>
 <body>
@@ -92,15 +92,15 @@
   <div class="overlay" id="panel-overlay"></div>
   <div class="modal" id="modal"><div class="box"><header><span id="modal-title">Detalle</span><button class="btn ghost" id="modal-close">✖</button></header><div class="content" id="modal-content"></div></div></div>
   
-  <div class="section-panel" id="panel-finanzas"><div class="section-header"><div class="section-title">Finanzas</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body"><div aria-label="Gestión de Finanzas" class="tabs" role="tablist"><button aria-selected="true" class="tab" id="tab-resumen" role="tab">Resumen</button><button class="tab" id="tab-propiedades" role="tab">Propiedades</button><button class="tab" id="tab-alquileres" role="tab">Alquileres</button><button class="tab" id="tab-ingresos" role="tab">Otros Ingresos</button><button class="tab" id="tab-gastos" role="tab">Gastos</button><button class="tab" id="tab-servicios" role="tab">Servicios</button></div><div id="panel-resumen" role="tabpanel"><div class="row" style="align-items:end;gap:16px; margin-bottom: 24px;"><input id="res-mes" type="month"/> <button class="btn" id="btn-refrescar-resumen">Refrescar</button> </div><h3 style="margin-bottom: 12px;">Resumen del Mes</h3><div class="kpi"><div class="box"><span class="icon">📥</span><div class="title">Ingresos Mes</div><div class="value" id="kpi-ing-mes">$0</div></div><div class="box"><span class="icon">🏠</span><div class="title">Alquiler Mes</div><div class="value" id="kpi-renta-mes">$0</div></div><div class="box"><span class="icon">📤</span><div class="title">Gastos Mes</div><div class="value" id="kpi-gas-mes">$0</div></div><div class="box"><span class="icon">💰</span><div class="title">Saldo Mes</div><div class="value" id="kpi-saldo-mes">$0</div></div></div><h3 style="margin: 24px 0 12px 0;">Acumulado Total</h3><div class="kpi"><div class="box"><span class="icon">📥</span><div class="title">Ingresos Acum</div><div class="value" id="kpi-ing-acum">$0</div></div><div class="box"><span class="icon">🏠</span><div class="title">Alquiler Acum</div><div class="value" id="kpi-renta-acum">$0</div></div><div class="box"><span class="icon">📤</span><div class="title">Gastos Acum</div><div class="value" id="kpi-gas-acum">$0</div></div><div class="box"><span class="icon">💰</span><div class="title">Saldo Acum</div><div class="value" id="kpi-saldo-acum">$0</div></div></div></div><div class="hidden" id="panel-propiedades" role="tabpanel"><div class="card"><header><h2>Añadir/Editar Propiedad</h2></header><div class="content"><form id="form-propiedad" class="grid two"><input id="prop-id" type="hidden"/><div class="col"><label for="prop-nombre">Nombre</label><input id="prop-nombre" required=""/></div><div class="col"><label for="prop-ciudad">Ciudad</label><input id="prop-ciudad" required=""/></div><div class="col"><label for="prop-arrendatario">Arrendatario</label><input id="prop-arrendatario" required=""/></div><div class="col"><label for="prop-alquiler">Alquiler ($)</label><input id="prop-alquiler" type="number"/></div><div class="row" style="grid-column: 1 / -1;"><button class="btn primary" type="submit">Guardar</button><button class="btn ghost" id="btn-cancelar-propiedad" type="reset">Limpiar</button></div></form></div></div><div class="card" style="margin-top:24px;"><header><h2>Propiedades Guardadas</h2></header><div class="content"><table id="tabla-propiedades"><thead><tr><th>Propiedad</th><th>Ciudad</th><th>Arrendatario</th><th>Alquiler</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></div></div><div class="hidden" id="panel-alquileres" role="tabpanel">...</div><div class="hidden" id="panel-ingresos" role="tabpanel">...</div><div class="hidden" id="panel-gastos" role="tabpanel">...</div><div class="hidden" id="panel-servicios" role="tabpanel">...</div></div></div>
-  <div class="section-panel" id="panel-salud"><div class="section-header"><div class="section-title">Salud</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body">...</div></div>
-  <div class="section-panel" id="panel-entretenimiento"><div class="section-header"><div class="section-title">Entretenimiento</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body">...</div></div>
-  <div class="section-panel" id="panel-deportes"><div class="section-header"><div class="section-title">Deportes</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body">...</div></div>
-  <div class="section-panel" id="panel-cocina"><div class="section-header"><div class="section-title">Cocina</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body">...</div></div>
-  <div class="section-panel" id="panel-redes"><div class="section-header"><div class="section-title">Redes Sociales</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body">...</div></div>
+  <div class="section-panel" id="panel-finanzas"><div class="section-header"><div class="section-title">Finanzas</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body"><div class="tabs" role="tablist"><button aria-selected="true" class="tab" id="tab-resumen" role="tab">Resumen</button><button class="tab" id="tab-propiedades" role="tab">Propiedades</button><button class="tab" id="tab-alquileres" role="tab">Alquileres</button><button class="tab" id="tab-ingresos" role="tab">Ingresos</button><button class="tab" id="tab-gastos" role="tab">Gastos</button><button class="tab" id="tab-servicios" role="tab">Servicios</button></div><div id="panel-resumen" role="tabpanel"><div class="row" style="align-items:end;gap:16px; margin-bottom: 24px;"><input id="res-mes" type="month"/> <button class="btn" id="btn-refrescar-resumen">Refrescar</button> </div><h3 style="margin-bottom: 12px;">Resumen del Mes</h3><div class="kpi"><div class="box"><span class="icon">📥</span><div class="title">Ingresos Mes</div><div class="value" id="kpi-ing-mes">$0</div></div><div class="box"><span class="icon">🏠</span><div class="title">Alquiler Mes</div><div class="value" id="kpi-renta-mes">$0</div></div><div class="box"><span class="icon">📤</span><div class="title">Gastos Mes</div><div class="value" id="kpi-gas-mes">$0</div></div><div class="box"><span class="icon">💰</span><div class="title">Saldo Mes</div><div class="value" id="kpi-saldo-mes">$0</div></div></div><h3 style="margin: 24px 0 12px 0;">Acumulado Total</h3><div class="kpi"><div class="box"><span class="icon">📥</span><div class="title">Ingresos Acum</div><div class="value" id="kpi-ing-acum">$0</div></div><div class="box"><span class="icon">🏠</span><div class="title">Alquiler Acum</div><div class="value" id="kpi-renta-acum">$0</div></div><div class="box"><span class="icon">📤</span><div class="title">Gastos Acum</div><div class="value" id="kpi-gas-acum">$0</div></div><div class="box"><span class="icon">💰</span><div class="title">Saldo Acum</div><div class="value" id="kpi-saldo-acum">$0</div></div></div></div><div class="hidden" id="panel-propiedades" role="tabpanel"><div class="card"><header><h2>Añadir/Editar Propiedad</h2></header><div class="content"><form id="form-propiedad" class="grid two"><input id="prop-id" type="hidden"/><div class="col"><label for="prop-nombre">Nombre</label><input id="prop-nombre" required=""/></div><div class="col"><label for="prop-ciudad">Ciudad</label><input id="prop-ciudad" required=""/></div><div class="col"><label for="prop-arrendatario">Arrendatario</label><input id="prop-arrendatario" required=""/></div><div class="col"><label for="prop-alquiler">Alquiler ($)</label><input id="prop-alquiler" type="number"/></div><div class="row" style="grid-column: 1 / -1;"><button class="btn primary" type="submit">Guardar</button><button class="btn ghost" id="btn-cancelar-propiedad" type="reset">Limpiar</button></div></form></div></div><div class="card" style="margin-top:24px;"><header><h2>Propiedades Guardadas</h2></header><div class="content"><table id="tabla-propiedades"><thead><tr><th>Propiedad</th><th>Ciudad</th><th>Arrendatario</th><th>Alquiler</th><th>Acciones</th></tr></thead><tbody></tbody></table></div></div></div><div class="hidden" id="panel-alquileres" role="tabpanel"><div class="card"><header><h2>Registrar Pago de Alquiler</h2></header><div class="content"><form id="form-alquiler" class="grid three"><div class="col"><label for="alq-propiedad">Propiedad</label><select id="alq-propiedad" required></select></div><div class="col"><label for="alq-mes">Mes</label><input id="alq-mes" type="month" required/></div><div class="col"><label for="alq-monto">Monto Pagado</label><input id="alq-monto" type="number" required/></div><div class="row"><label style="display:flex; align-items:center; gap: 8px; margin-top: 1rem;"><input id="alq-pagado" type="checkbox"/>Pagado</label><button class="btn primary" type="submit">Guardar</button></div></form></div></div><div class="card" style="margin-top:24px;"><header><h2>Historial de Pagos de Alquiler</h2></header><div class="content"><table id="tabla-alquileres"><thead><tr><th>Propiedad</th><th>Mes</th><th>Monto</th><th>Estado</th><th></th></tr></thead><tbody></tbody></table></div></div></div><div class="hidden" id="panel-ingresos" role="tabpanel"><div class="card"><header><h2>Añadir Ingreso</h2></header><div class="content"><form id="form-ingreso" class="grid three"><div class="col"><label for="ing-desc">Descripción</label><input id="ing-desc" required/></div><div class="col"><label for="ing-monto">Monto</label><input id="ing-monto" type="number" required/></div><div class="col"><label for="ing-fecha">Fecha</label><input id="ing-fecha" type="date" required/></div><div class="row"><button class="btn primary" type="submit">Guardar</button></div></form></div></div><div class="card" style="margin-top:24px;"><header><h2>Historial de Ingresos</h2></header><div class="content"><table id="tabla-ingresos"><thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody></tbody></table></div></div></div><div class="hidden" id="panel-gastos" role="tabpanel"><div class="card"><header><h2>Añadir Gasto</h2></header><div class="content"><form id="form-gasto" class="grid three"><div class="col"><label for="gas-desc">Descripción</label><input id="gas-desc" required/></div><div class="col"><label for="gas-monto">Monto</label><input id="gas-monto" type="number" required/></div><div class="col"><label for="gas-fecha">Fecha</label><input id="gas-fecha" type="date" required/></div><div class="row"><button class="btn primary" type="submit">Guardar</button></div></form></div></div><div class="card" style="margin-top:24px;"><header><h2>Historial de Gastos</h2></header><div class="content"><table id="tabla-gastos"><thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody></tbody></table></div></div></div><div class="hidden" id="panel-servicios" role="tabpanel"><div class="card"><header><h2>Registrar Pago de Servicio</h2></header><div class="content"><form id="form-servicio" class="grid three"><div class="col"><label for="serv-propiedad">Propiedad</label><select id="serv-propiedad" required></select></div><div class="col"><label for="serv-empresa">Empresa</label><input id="serv-empresa" required/></div><div class="col"><label for="serv-mes">Mes</label><input id="serv-mes" type="month" required/></div><div class="row"><label style="display:flex; align-items:center; gap: 8px; margin-top: 1rem;"><input id="serv-pagado" type="checkbox"/>Pagado</label><button class="btn primary" type="submit">Guardar</button></div></form></div></div><div class="card" style="margin-top:24px;"><header><h2>Historial de Servicios</h2></header><div class="content"><table id="tabla-servicios"><thead><tr><th>Propiedad</th><th>Empresa</th><th>Mes</th><th>Estado</th><th></th></tr></thead><tbody></tbody></table></div></div></div></div></div>
+  <div class="section-panel" id="panel-salud"><div class="section-header"><div class="section-title">Salud</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body"></div></div>
+  <div class="section-panel" id="panel-entretenimiento"><div class="section-header"><div class="section-title">Entretenimiento</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body"></div></div>
+  <div class="section-panel" id="panel-deportes"><div class="section-header"><div class="section-title">Deportes</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body"></div></div>
+  <div class="section-panel" id="panel-cocina"><div class="section-header"><div class="section-title">Cocina</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body"></div></div>
+  <div class="section-panel" id="panel-redes"><div class="section-header"><div class="section-title">Redes Sociales</div><div class="section-actions"><button class="btn ghost btn-close-section" title="Cerrar">✖</button></div></div><div class="section-body"></div></div>
 
   <div class="chat-launcher"><button class="btn primary" id="open-chat" title="Asistente">💬</button></div>
-  <aside class="chat-bubble" id="chat-panel"><div class="chat-header"><div class="chat-title">Asistente Virtual</div><div class="chat-actions"><button class="btn ghost" id="btn-clear-chat" title="Borrar">🗑️</button><button class="btn ghost" id="btn-close-chat" title="Cerrar">✖</button></div></div><div class="chipbar"><span class="chip" data-chip="resumen">📊 Resumen</span><span class="chip" data-chip="propiedades">🏠 Propiedades</span></div><div class="chat-body" id="chat-body"></div><div class="chat-footer"><input id="chat-input" placeholder="Pregunta algo..."/><button class="btn primary" id="chat-send">Enviar</button></div></aside>
+  <aside class="chat-bubble" id="chat-panel"><div class="chat-header"><div class="chat-title">Asistente</div><div class="chat-actions"><button class="btn ghost" id="btn-clear-chat">🗑️</button><button class="btn ghost" id="btn-close-chat">✖</button></div></div><div class="chat-body" id="chat-body"></div><div class="chat-footer"><input id="chat-input" placeholder="Pregunta algo..."/><button class="btn primary" id="chat-send">Enviar</button></div></aside>
   <div class="toast" id="toast"></div>
 
   <script type="module">
@@ -123,121 +123,178 @@
     const db = getFirestore(app);
     let userDocRef;
 
-    // ===== UTILIDADES Y ESTADO GLOBAL =====
+    // ===== ESTADO GLOBAL =====
+    let state = {
+        propiedades: [], chat: [], alquileres: [], ingresos: [], gastos: [], servicios: []
+    };
+    
+    // ===== FUNCIONES DE UTILIDAD =====
     const $=(s,r=document)=>r.querySelector(s); 
     const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
     const toast=(m)=>{const t=$('#toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000)};
     const fmt=(n)=> new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(Number(n||0));
     const toYM=d=>(d||'').slice(0,7); 
 
-    let state={
-        propiedades: [], ingresos: [], gastos: [], servicios: [], 
-        chat: [], alquileres: [], links: [], recetas: []
-    };
-    
-    // ===== SINCRONIZACIÓN CON FIREBASE =====
-    let authReadyPromiseResolver;
-    const authReadyPromise = new Promise(resolve => { authReadyPromiseResolver = resolve; });
-
+    // ===== LÓGICA DE DATOS (FIREBASE) =====
     async function persist() {
-        await authReadyPromise;
         if (!userDocRef) return;
-        try { await setDoc(userDocRef, state); } catch (e) { console.error("Error al guardar:", e); toast("Error de conexión."); }
+        try { await setDoc(userDocRef, state); } catch (e) { console.error("Error al guardar:", e); }
     }
 
-    onAuthStateChanged(auth, user => {
-        if (user) {
-            userDocRef = doc(db, "users", user.uid);
-            authReadyPromiseResolver();
-            onSnapshot(userDocRef, (doc) => {
-                const data = doc.exists() ? doc.data() : {};
-                Object.keys(state).forEach(key => { state[key] = data[key] || []; });
-                renderAll();
-                loadChatHistory();
-            });
-        } else {
-            signInAnonymously(auth).catch(e => console.error("Error de auth:", e));
-        }
-    });
-    
-    // ===== FUNCIÓN DE CARGA DE DATOS (PARA CONSOLA) =====
-    window.loadData = async function(dataToLoad) {
-        await authReadyPromise;
-        if (!dataToLoad) { return alert("No hay datos para cargar."); }
-        
-        Object.keys(dataToLoad).forEach(key => {
-            if (state.hasOwnProperty(key) && Array.isArray(dataToLoad[key])) {
-                dataToLoad[key].forEach(newItem => {
-                    const uniqueId = newItem.id || newItem.nombre;
-                    if (!state[key].some(existing => (existing.id || existing.nombre) === uniqueId)) {
-                        state[key].push(newItem);
-                    }
-                });
-            }
-        });
-
-        await persist();
-        alert(`Carga completada. Los datos deberían aparecer ahora.`);
-    }
-
-    // ===== UI (PANELES, MODALES, TABS, ETC.) =====
-    const modal = $('#modal'); const overlay = $('#panel-overlay');
-    function openSection(id) { overlay.classList.add('open'); $(`#${id}`)?.classList.add('open'); }
-    function closeSection(id) { $(`#${id}`)?.classList.remove('open'); if (!$$('.section-panel.open').length) overlay.classList.remove('open');}
-    function openModal(title, content) { $('#modal-title').textContent = title; $('#modal-content').innerHTML = content; overlay.classList.add('open'); modal.classList.add('open'); }
-    function closeModal() { modal.classList.remove('open'); if (!$$('.section-panel.open').length) overlay.classList.remove('open'); }
-    function closeAll() { $$('.section-panel.open').forEach(p => p.classList.remove('open')); closeModal(); }
-    
     // ===== RENDERIZADO =====
-    function renderAll() { renderPropiedades(); renderResumen(); /* ... y otras ... */ }
-    function renderPropiedades(){ const tb=$('#tabla-propiedades tbody'); tb.innerHTML=''; state.propiedades.forEach((p,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${p.nombre}</td><td>${p.ciudad}</td><td>${p.arrendatario}</td><td>${fmt(p.alquiler||0)}</td><td class="row"><button class="btn ghost" data-type="prop-edit" data-i="${i}">Editar</button><button class="btn ghost" data-type="prop-dup" data-i="${i}">Duplicar</button><button class="btn ghost" data-type="prop-del" data-i="${i}">Eliminar</button></td>`; tb.append(tr); }); }
-    function renderResumen(){ const ym=$('#res-mes')?.value||toYM(new Date().toISOString()); if($('#res-mes')) $('#res-mes').value=ym; const sum = (list, filter, key) => list.filter(filter).reduce((s, r) => s + Number(r[key] || 0), 0); const ingM=sum(state.ingresos, r=>toYM(r.fecha)===ym, 'monto'), gasM=sum(state.gastos, r=>toYM(r.fecha)===ym, 'monto'), alqM=sum(state.alquileres, a=>a.mes===ym, 'monto'); const ingA=sum(state.ingresos, ()=>true, 'monto'), gasA=sum(state.gastos, ()=>true, 'monto'), alqA=sum(state.alquileres, ()=>true, 'monto'); const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=fmt(v);}; set('kpi-ing-mes',ingM); set('kpi-renta-mes',alqM); set('kpi-gas-mes',gasM); set('kpi-saldo-mes', (ingM+alqM)-gasM); set('kpi-ing-acum',ingA); set('kpi-renta-acum',alqA); set('kpi-gas-acum',gasA); set('kpi-saldo-acum', (ingA+alqA)-gasA); }
+    function renderAll() {
+        renderPropiedades();
+        renderAlquileres();
+        renderIngresos();
+        renderGastos();
+        renderServicios();
+        renderResumen();
+        updatePropertyDropdowns();
+    }
+    function renderPropiedades(){ const tb=$('#tabla-propiedades'); if(!tb) return; const tbody = tb.querySelector('tbody'); tbody.innerHTML=''; (state.propiedades || []).forEach((p,i)=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${p.nombre}</td><td>${p.ciudad}</td><td>${p.arrendatario}</td><td>${fmt(p.alquiler||0)}</td><td class="row"><button class="btn ghost" data-type="prop-edit" data-i="${i}">Editar</button><button class="btn ghost" data-type="prop-dup" data-i="${i}">Duplicar</button><button class="btn ghost" data-type="prop-del" data-i="${i}">Eliminar</button></td>`; tbody.append(tr); }); }
+    function renderAlquileres() { const tbody = $('#tabla-alquileres tbody'); if (!tbody) return; tbody.innerHTML = ''; (state.alquileres || []).forEach((a, i) => { const prop = (state.propiedades || []).find(p => p.id === a.propId); const tr = document.createElement('tr'); tr.innerHTML = `<td>${prop?.nombre || 'N/A'}</td><td>${a.mes}</td><td>${fmt(a.monto)}</td><td>${a.pagado ? '✅ Pagado' : '❌ Pendiente'}</td><td><button class="btn ghost" data-type="alq-del" data-i="${i}">Eliminar</button></td>`; tbody.append(tr); }); }
+    function renderIngresos() { const tbody = $('#tabla-ingresos tbody'); if (!tbody) return; tbody.innerHTML = ''; (state.ingresos || []).forEach((ing, i) => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${ing.fecha}</td><td>${ing.desc}</td><td>${fmt(ing.monto)}</td><td><button class="btn ghost" data-type="ing-del" data-i="${i}">Eliminar</button></td>`; tbody.append(tr); }); }
+    function renderGastos() { const tbody = $('#tabla-gastos tbody'); if (!tbody) return; tbody.innerHTML = ''; (state.gastos || []).forEach((gas, i) => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${gas.fecha}</td><td>${gas.desc}</td><td>${fmt(gas.monto)}</td><td><button class="btn ghost" data-type="gas-del" data-i="${i}">Eliminar</button></td>`; tbody.append(tr); }); }
+    function renderServicios() { const tbody = $('#tabla-servicios tbody'); if (!tbody) return; tbody.innerHTML = ''; (state.servicios || []).forEach((s, i) => { const prop = (state.propiedades || []).find(p => p.id === s.propId); const tr = document.createElement('tr'); tr.innerHTML = `<td>${prop?.nombre || 'N/A'}</td><td>${s.empresa}</td><td>${s.mes}</td><td>${s.pagado ? '✅ Pagado' : '❌ Pendiente'}</td><td><button class="btn ghost" data-type="serv-del" data-i="${i}">Eliminar</button></td>`; tbody.append(tr); }); }
+    function renderResumen(){ const ym=$('#res-mes')?.value||toYM(new Date().toISOString()); if($('#res-mes')) $('#res-mes').value=ym; const sum = (list, filter, key) => (list||[]).filter(filter).reduce((s, r) => s + Number(r[key] || 0), 0); const ingM=sum(state.ingresos, r=>toYM(r.fecha)===ym, 'monto'), gasM=sum(state.gastos, r=>toYM(r.fecha)===ym, 'monto'), alqM=sum(state.alquileres, a=>a.mes===ym && a.pagado, 'monto'); const ingA=sum(state.ingresos, ()=>true, 'monto'), gasA=sum(state.gastos, ()=>true, 'monto'), alqA=sum(state.alquileres, a => a.pagado, 'monto'); const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=fmt(v);}; set('kpi-ing-mes',ingM); set('kpi-renta-mes',alqM); set('kpi-gas-mes',gasM); set('kpi-saldo-mes', (ingM+alqM)-gasM); set('kpi-ing-acum',ingA); set('kpi-renta-acum',alqA); set('kpi-gas-acum',gasA); set('kpi-saldo-acum', (ingA+alqA)-gasA); }
+    function updatePropertyDropdowns() { $$('#alq-propiedad, #serv-propiedad').forEach(select => { const currentVal = select.value; select.innerHTML = '<option value="">Seleccionar Propiedad</option>'; (state.propiedades || []).forEach(p => select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`); select.value = currentVal; });}
 
-    // ===== FORMULARIOS Y ACCIONES =====
-    let editingPropIndex=null;
-    function startEditProp(index) { /* ... (código anterior) ... */ }
-    $('#form-propiedad').addEventListener('submit', async (e)=>{ e.preventDefault(); const id=$('#prop-id').value||crypto.randomUUID(); const data={id, nombre:$('#prop-nombre').value, ciudad:$('#prop-ciudad').value, arrendatario:$('#prop-arrendatario').value, alquiler:$('#prop-alquiler').value}; if(editingPropIndex!==null){state.propiedades[editingPropIndex]=data;}else{state.propiedades.push(data);} await persist(); editingPropIndex=null; e.target.reset();});
-    
+    // ===== LÓGICA DE UI Y EVENTOS =====
+    let editingPropIndex = null;
+    function startEditProp(index) {
+        editingPropIndex = index;
+        const p = state.propiedades[index];
+        if (!p) return;
+        $('#prop-id').value = p.id; $('#prop-nombre').value = p.nombre; $('#prop-ciudad').value = p.ciudad;
+        $('#prop-arrendatario').value = p.arrendatario; $('#prop-alquiler').value = p.alquiler;
+        openSection('panel-finanzas');
+        window.selectFinanceTab('propiedades');
+        $('#form-propiedad').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        toast('Editando propiedad...');
+    }
+
     // ===== ASISTENTE VIRTUAL =====
-    const chat={ panel:$('#chat-panel'), body:$('#chat-body'), input:$('#chat-input') };
-    async function pushMsg(html, me=false){ /* ... (código anterior) ... */ }
-    async function processAssistantQuery(query) { /* ... (código anterior) ... */ }
-    function loadChatHistory(clearAndGreet = false) { /* ... (código anterior) ... */ }
+    const chat = { panel:$('#chat-panel'), body:$('#chat-body'), input:$('#chat-input') };
+    async function pushMsg(html, me=false){ const d=document.createElement('div'); d.className='msg'+(me?' me':''); d.innerHTML=html; chat.body.append(d); chat.body.scrollTop=chat.body.scrollHeight; state.chat.push({me,html}); await persist(); }
+    async function processAssistantQuery(query) {
+        const q = query.toLowerCase().trim();
+        let response = '';
+        if (q.includes('cuántas propiedades')) {
+            response = `Tienes ${state.propiedades.length} propiedades.`;
+        } else if (q.includes('propiedades')) {
+            response = `Tus propiedades son: <ul>` + state.propiedades.map(p => `<li>${p.nombre}</li>`).join('') + `</ul>`;
+        } else if (q.includes('resumen')) {
+            const ym = toYM(new Date().toISOString());
+            const sum = (list, filter, key) => list.filter(filter).reduce((s, r) => s + Number(r[key] || 0), 0);
+            const ingM = sum(state.ingresos, r => toYM(r.fecha) === ym, 'monto');
+            const alqM = sum(state.alquileres, a => a.mes === ym && a.pagado, 'monto');
+            const gasM = sum(state.gastos, r => toYM(r.fecha) === ym, 'monto');
+            response = `📊 Resumen para ${ym}:<br>Ingresos: ${fmt(ingM + alqM)}<br>Gastos: ${fmt(gasM)}<br><b>Saldo: ${fmt((ingM + alqM) - gasM)}</b>`;
+        }
+        if (response) { await pushMsg(response); } 
+        else { 
+            await pushMsg(`Buscando en internet sobre "${q}"...`);
+            try {
+                const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&t=justpersonalapp`);
+                const data = await res.json();
+                if (data.AbstractText) {
+                    await pushMsg(`Esto encontré: ${data.AbstractText}`);
+                } else {
+                    await pushMsg(`No encontré una respuesta rápida en internet.`);
+                }
+            } catch (e) { await pushMsg(`Error al conectar con internet.`); }
+        }
+    }
+    function loadChatHistory(clearAndGreet = false) { 
+        if(!chat.body) return;
+        chat.body.innerHTML = ''; 
+        if (clearAndGreet || !state.chat.length) { 
+             const welcomeMsg = '¡Hola! 👋 Soy tu asistente. Pregúntame sobre tus datos o busca en la web.';
+             const d = document.createElement('div'); d.className = 'msg'; d.innerHTML = welcomeMsg; chat.body.append(d);
+        } else { 
+            state.chat.forEach(msg => { const d=document.createElement('div'); d.className='msg'+(msg.me?' me':''); d.innerHTML=msg.html; chat.body.append(d); }); 
+        } 
+        if(chat.body.scrollHeight > 0) chat.body.scrollTop=chat.body.scrollHeight; 
+    }
     
-    // ===== INICIALIZACIÓN =====
+    // ===== INICIALIZACIÓN DE LA APLICACIÓN =====
     document.addEventListener('DOMContentLoaded', () => {
-        // Atar todos los event listeners de la UI
-        $('#modal-close').addEventListener('click', closeModal);
-        $('#panel-overlay').addEventListener('click', closeAll);
+        // --- 1. ACTIVAR LISTENERS DE UI BÁSICOS ---
+        const overlay = $('#panel-overlay');
+        const openSection = (id) => { overlay.classList.add('open'); $(`#${id}`)?.classList.add('open'); };
+        const closeSection = (id) => { $(`#${id}`)?.classList.remove('open'); if (!$$('.section-panel.open').length) overlay.classList.remove('open');};
+        
+        $('#panel-overlay').addEventListener('click', () => $$('.section-panel.open').forEach(p => closeSection(p.id)));
         $$('.section-launcher').forEach(launcher => launcher.addEventListener('click', () => openSection(launcher.dataset.panel)));
         $$('.btn-close-section').forEach(btn => btn.addEventListener('click', () => closeSection(btn.closest('.section-panel').id)));
+        
+        const doc = document.documentElement;
+        const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        doc.setAttribute('data-theme', theme);
+        $('#theme-toggle').textContent = theme === 'dark' ? '☀️' : '🌙';
         $('#theme-toggle').addEventListener('click', () => { 
-            const doc = document.documentElement;
             const newTheme = doc.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
-            localStorage.setItem('theme', newTheme); 
-            doc.setAttribute('data-theme', newTheme); 
+            localStorage.setItem('theme', newTheme); doc.setAttribute('data-theme', newTheme); 
             $('#theme-toggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
         });
 
-        const tabsContainer = $('#panel-finanzas');
-        if (!tabsContainer) return;
-        const tabs=$$('.tab', tabsContainer); 
-        const panels=$$('div[id^="panel-"]', tabsContainer);
-        window.selectFinanceTab=(id)=>{ tabs.forEach(t=>t.setAttribute('aria-selected',t.id === 'tab-'+id)); panels.forEach(p=>p.classList.toggle('hidden', p.id !== 'panel-'+id)); }; 
-        tabs.forEach(t=> t.addEventListener('click',()=> window.selectFinanceTab(t.id.replace('tab-',''))));
+        const tabs = $$('.tab');
+        const panels = $$('div[id^="panel-"]', $('#panel-finanzas'));
+        window.selectFinanceTab = (id) => {
+            tabs.forEach(t => t.setAttribute('aria-selected', t.id === 'tab-' + id));
+            panels.forEach(p => p.classList.toggle('hidden', p.id !== 'panel-' + id));
+        };
+        tabs.forEach(t => t.addEventListener('click', () => window.selectFinanceTab(t.id.replace('tab-', ''))));
         
-        // Dark Mode Init
-        const doc = document.documentElement;
-        const storedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = storedTheme || (prefersDark ? 'dark' : 'light');
-        doc.setAttribute('data-theme', theme);
-        $('#theme-toggle').textContent = theme === 'dark' ? '☀️' : '🌙';
-
-        // Chat listeners
         const toggleChat = (force) => $('#chat-panel').classList.toggle('open', force);
+        async function sendChat(){ const v=(chat.input.value||'').trim(); if(!v) return; await pushMsg(v,true); chat.input.value=''; await processAssistantQuery(v); }
         $('#open-chat').addEventListener('click', () => toggleChat());
         $('#btn-close-chat').addEventListener('click', () => toggleChat(false));
+        $('#btn-clear-chat').addEventListener('click', async ()=>{ state.chat=[]; await persist(); loadChatHistory(true); });
+        $('#chat-send').addEventListener('click', sendChat); 
+        $('#chat-input').addEventListener('keydown', (e) => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); }});
+
+        // Formularios
+        $('#form-propiedad').addEventListener('submit', async (e)=>{ e.preventDefault(); const id=$('#prop-id').value||crypto.randomUUID(); const data={id, nombre:$('#prop-nombre').value, ciudad:$('#prop-ciudad').value, arrendatario:$('#prop-arrendatario').value, alquiler:$('#prop-alquiler').value}; if(editingPropIndex!==null){state.propiedades[editingPropIndex]=data;}else{state.propiedades.push(data);} await persist(); editingPropIndex=null; e.target.reset();});
+        $('#form-alquiler').addEventListener('submit', async (e) => { e.preventDefault(); state.alquileres.push({id: crypto.randomUUID(), propId: $('#alq-propiedad').value, mes: $('#alq-mes').value, monto: $('#alq-monto').value, pagado: $('#alq-pagado').checked }); await persist(); e.target.reset(); });
+        $('#form-ingreso').addEventListener('submit', async (e) => { e.preventDefault(); state.ingresos.push({id: crypto.randomUUID(), desc: $('#ing-desc').value, monto: $('#ing-monto').value, fecha: $('#ing-fecha').value }); await persist(); e.target.reset(); });
+        $('#form-gasto').addEventListener('submit', async (e) => { e.preventDefault(); state.gastos.push({id: crypto.randomUUID(), desc: $('#gas-desc').value, monto: $('#gas-monto').value, fecha: $('#gas-fecha').value }); await persist(); e.target.reset(); });
+        $('#form-servicio').addEventListener('submit', async (e) => { e.preventDefault(); state.servicios.push({id: crypto.randomUUID(), propId: $('#serv-propiedad').value, empresa: $('#serv-empresa').value, mes: $('#serv-mes').value, pagado: $('#serv-pagado').checked }); await persist(); e.target.reset(); });
+        
+        // Clics en tablas (delegación)
+        document.addEventListener('click', async (e)=>{ 
+            const b = e.target.closest('button[data-type]');
+            if (!b) return;
+            const t = b.dataset.type, i = Number(b.dataset.i);
+            const actions = { 'prop-del': 'propiedades', 'alq-del': 'alquileres', 'ing-del': 'ingresos', 'gas-del': 'gastos', 'serv-del': 'servicios' };
+            if (t === 'prop-edit') { startEditProp(i); }
+            else if (t === 'prop-dup') { const original = state.propiedades[i]; if(original){ const newProp = {...original, id: crypto.randomUUID(), nombre: original.nombre + ' - Copia'}; state.propiedades.splice(i + 1, 0, newProp); await persist();}}
+            else if (actions[t]) { if (confirm(`¿Eliminar?`)) { state[actions[t]].splice(i,1); await persist(); }}
+        });
+
+        // Fechas iniciales
+        const today = new Date().toISOString().slice(0,10);
+        $('#res-mes').value = toYM(today);
+        $('#alq-mes').value = toYM(today);
+        $('#ing-fecha').value = today;
+        $('#gas-fecha').value = today;
+        $('#serv-mes').value = toYM(today);
+
+        // --- 2. CONECTAR A FIREBASE Y CARGAR DATOS ---
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                userDocRef = doc(db, "users", user.uid);
+                authReadyResolver();
+                onSnapshot(userDocRef, (doc) => {
+                    const data = doc.exists() ? doc.data() : {};
+                    Object.keys(state).forEach(key => { state[key] = data[key] || []; });
+                    renderAll();
+                    loadChatHistory();
+                });
+            } else {
+                signInAnonymously(auth).catch(e => console.error("Error de auth:", e));
+            }
+        });
     });
   </script>
 </body>
